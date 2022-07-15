@@ -1,0 +1,3 @@
+C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+C:\Users\Admin\Downloads\Telegram Desktop\FilmParser (2)\FilmParser\MoviesParser\bin\Debug\net6.0\movies.xlsx
+160.116.129.191:8000

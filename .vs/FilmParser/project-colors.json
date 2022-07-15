@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c0811b88-51f1-4bba-8dbe-1636806f3176": {
+      "ProjectGuid": "c0811b88-51f1-4bba-8dbe-1636806f3176",
+      "DisplayName": "FilmParser",
+      "ColorIndex": 0
+    },
+    "349c7574-8e25-4daf-aa2a-903ac0b58d17": {
+      "ProjectGuid": "349c7574-8e25-4daf-aa2a-903ac0b58d17",
+      "DisplayName": "MoviesParser",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 2
+}
