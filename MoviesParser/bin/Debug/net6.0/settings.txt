@@ -1,3 +1,6 @@
-C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
-C:\Users\Admin\Downloads\Telegram Desktop\FilmParser (2)\FilmParser\MoviesParser\bin\Debug\net6.0\movies.xlsx
+F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\chrome-win\chrome.exe
+F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\movies.xlsx
 160.116.129.191:8000
+vxjeAx
+3jJLSH
+movie

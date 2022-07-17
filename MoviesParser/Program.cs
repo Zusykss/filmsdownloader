@@ -2,7 +2,9 @@
 using MoviesParser;
 #endregion
 
-var category = "movie";
+
+
+var category = File.ReadAllLines("settings.txt")[5];
 PuppeteerWorker puppeteerWorker = new PuppeteerWorker(category);
 
 await puppeteerWorker.Start();

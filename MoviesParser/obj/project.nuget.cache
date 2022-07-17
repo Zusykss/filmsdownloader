@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8ybZ9vVlxEmAFRqIva4vGVR8R/0mHQD+aC0/02Fu92cQfknk4EZAGXkTW4LSMN2v+IM7eZxzUY+ALaZy5MUTeg==",
+  "dgSpecHash": "b2LEPLp5iQqbmjNb+HTgAm5K63Gl2RdmlYmIsskp23Ul17mmG4jQV5AgrelBYtvejIKyZTocNyiWgNNmEogR3w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\MoviesParser.csproj",
+  "projectFilePath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\documentformat.openxml\\2.17.1\\documentformat.openxml.2.17.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\epplus\\6.0.6\\epplus.6.0.6.nupkg.sha512",

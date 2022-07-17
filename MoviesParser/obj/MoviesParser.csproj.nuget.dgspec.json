@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\MoviesParser.csproj": {}
+    "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\MoviesParser.csproj": {
+    "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\MoviesParser.csproj",
+        "projectUniqueName": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
         "projectName": "MoviesParser",
-        "projectPath": "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\MoviesParser.csproj",
+        "projectPath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Downloads\\Telegram Desktop\\FilmParser (2)\\FilmParser\\MoviesParser\\obj\\",
+        "outputPath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "E:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "F:\\Visual Studio\\SDK\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -72,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
