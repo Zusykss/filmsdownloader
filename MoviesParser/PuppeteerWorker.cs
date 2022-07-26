@@ -253,7 +253,7 @@ namespace MoviesParser
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(DateTime.UtcNow + " " + ex.Message);
                 if (ex.Message.Contains("Timeout of") && count < 5)
                 {
                     await _browser.CloseAsync();
@@ -632,7 +632,7 @@ namespace MoviesParser
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + " on " + item);
+                Console.WriteLine(DateTime.UtcNow + " " + ex.Message + " on " + item);
                 return false;
             }
             return true;
