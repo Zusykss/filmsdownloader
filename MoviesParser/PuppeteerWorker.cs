@@ -642,6 +642,7 @@ namespace MoviesParser
         {
             try
             {
+                await _page.WaitForSelectorAsync("#page_" + pageIndex);
                 var jsSelectAllAnchors =
                 @$"Array.from(document.querySelectorAll('#page_{pageIndex} > div > div > div > a')).map(a => a.href);";
                 var urls = await _page.EvaluateExpressionAsync<string[]>(jsSelectAllAnchors);
@@ -650,6 +651,10 @@ namespace MoviesParser
                 urls = urls.Where(url =>
                     !url.Contains($"https://www.themoviedb.org/{_category}?page=") &&
                     !url.Contains($"https://www.themoviedb.org/{_category}#")).ToArray();
+                if (!urls.Any())
+                {
+                    Console.WriteLine("Page haven`t urls");
+                }
                 foreach (var item in urls)
                 {
                     await ExecuteData(item);
