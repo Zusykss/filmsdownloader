@@ -1,5 +1,5 @@
-F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\chrome-win\chrome.exe
-F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\movies.xlsx
+C:\Program Files\Google\Chrome\Application\chrome.exe
+F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\movies2.xlsx
 160.116.129.191:8000
 vxjeAx
 3jJLSH
