@@ -245,6 +245,7 @@ namespace MoviesParser
 
                     }
                 }
+                await _page.EvaluateExpressionAsync("let arr = [];");
                 //Console.WriteLine(providersImages[0]);
                 //Thread.Sleep(3000);
                 //await _page.ClickAsync("img[src|=\"/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg\"]");
@@ -642,9 +643,12 @@ namespace MoviesParser
         {
             try
             {
-                await _page.WaitForSelectorAsync("#page_" + pageIndex);
+                
+                //await _page.WaitForSelectorAsync("#page_" + pageIndex);
                 var jsSelectAllAnchors =
-                @$"Array.from(document.querySelectorAll('#page_{pageIndex} > div > div > div > a')).map(a => a.href);";
+                @"arr = document.querySelectorAll('div.page_wrapper'); Array.from(document.querySelectorAll(`#${arr[arr.length - 1].id} > div > div > div > a:not(.no_click)`)).map(a => a.href);"; 
+                //var jsSelectAllAnchors =
+                //@$"Array.from(document.querySelectorAll('#page_{pageIndex} > div > div > div > a')).map(a => a.href);";
                 var urls = await _page.EvaluateExpressionAsync<string[]>(jsSelectAllAnchors);
                 //Console.WriteLine(String.Join(' ', urls));
                 //Console.WriteLine(pageIndex);
@@ -655,23 +659,30 @@ namespace MoviesParser
                 {
                     Console.WriteLine("Page haven`t urls");
                 }
-                foreach (var item in urls)
-                {
-                    await ExecuteData(item);
-                }
+
+                //if (pageIndex > 50)
+                //{
+                    foreach (var item in urls)
+                    {
+                        await ExecuteData(item);
+                    }
+                //}
+                
 
                 await _page.EvaluateExpressionAsync("window.scrollBy(0, document.body.scrollHeight)");
                 Thread.Sleep(1000);
                 if (pageIndex == 1)
                 {
                     await _page.ClickAsync("div.pagination > p.load_more > a");
-                    Thread.Sleep(1000);
                 }
+                Thread.Sleep(2000);
+                //await _page.Wait();
                 ++pageIndex;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await _page.EvaluateExpressionAsync("window.scrollBy(0, document.body.scrollHeight)");
+                Console.WriteLine(DateTime.UtcNow + " " + ex.Message);
                 await _tmpPage.CloseAsync();
                 return false;
             }
