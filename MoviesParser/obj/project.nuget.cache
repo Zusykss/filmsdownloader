@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "b2LEPLp5iQqbmjNb+HTgAm5K63Gl2RdmlYmIsskp23Ul17mmG4jQV5AgrelBYtvejIKyZTocNyiWgNNmEogR3w==",
+  "dgSpecHash": "yAhsWqfTph7pPghiXCNRk5IKDWVPl7o788KpYpgbMlyvnOYSlfJPUC7ocNplIMJ/KzyuUC9njMntwr8x10SA+A==",
   "success": true,
-  "projectFilePath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
+  "projectFilePath": "F:\\Work\\Freelance\\Peoples\\Mikhaylo_Titkov\\FilmParser\\MoviesParser\\MoviesParser.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\documentformat.openxml\\2.17.1\\documentformat.openxml.2.17.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\epplus\\6.0.6\\epplus.6.0.6.nupkg.sha512",

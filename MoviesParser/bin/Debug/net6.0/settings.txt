@@ -1,6 +1,6 @@
 C:\Program Files\Google\Chrome\Application\chrome.exe
 F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\Debug\net6.0\moviesNew.xlsx
-160.116.129.191:8000
-vxjeAx
-3jJLSH
+163.198.134.184:8000
+zpqjW0
+nX4NfG
 movie

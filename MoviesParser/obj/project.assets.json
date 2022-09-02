@@ -6270,11 +6270,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
+      "projectUniqueName": "F:\\Work\\Freelance\\Peoples\\Mikhaylo_Titkov\\FilmParser\\MoviesParser\\MoviesParser.csproj",
       "projectName": "MoviesParser",
-      "projectPath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\MoviesParser.csproj",
+      "projectPath": "F:\\Work\\Freelance\\Peoples\\Mikhaylo_Titkov\\FilmParser\\MoviesParser\\MoviesParser.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "F:\\Work\\Programs IDES Projects\\VisualStudioSolutions\\Solutions\\MoviesParser\\obj\\",
+      "outputPath": "F:\\Work\\Freelance\\Peoples\\Mikhaylo_Titkov\\FilmParser\\MoviesParser\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "F:\\Visual Studio\\SDK\\NuGetPackages"
@@ -6335,7 +6335,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.108\\RuntimeIdentifierGraph.json"
       }
     }
   }
