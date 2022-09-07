@@ -4,3 +4,4 @@ F:\Work\Programs IDES Projects\VisualStudioSolutions\Solutions\MoviesParser\bin\
 zpqjW0
 nX4NfG
 movie
+https://localhost:7012/api/

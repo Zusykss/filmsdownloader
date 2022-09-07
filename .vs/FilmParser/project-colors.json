@@ -15,7 +15,27 @@
       "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
       "DisplayName": "Miscellaneous Files",
       "ColorIndex": -1
+    },
+    "b4737470-734a-4e9f-a158-15d301619a1d": {
+      "ProjectGuid": "b4737470-734a-4e9f-a158-15d301619a1d",
+      "DisplayName": "MoviesParserAPI",
+      "ColorIndex": 2
+    },
+    "5f4d70a8-d9b9-4405-9bbb-e6621a33d950": {
+      "ProjectGuid": "5f4d70a8-d9b9-4405-9bbb-e6621a33d950",
+      "DisplayName": "Core",
+      "ColorIndex": 3
+    },
+    "d3ce77fc-35f6-44c0-a208-845d0425e42b": {
+      "ProjectGuid": "d3ce77fc-35f6-44c0-a208-845d0425e42b",
+      "DisplayName": "Infrastructure",
+      "ColorIndex": 4
+    },
+    "7f31bdf1-0aad-4bed-b4cb-20646a2b02b7": {
+      "ProjectGuid": "7f31bdf1-0aad-4bed-b4cb-20646a2b02b7",
+      "DisplayName": "Infrastructure",
+      "ColorIndex": 5
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 6
 }

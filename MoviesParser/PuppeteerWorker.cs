@@ -27,6 +27,7 @@ namespace MoviesParser
         private FileInfo _filePath;
         private string _proxy = File.ReadAllLines("settings.txt")[2];
         private Dictionary<string, string> _providers;
+
         //Color colFromHex = new Color{ Rgb = ""}//System.Drawing.ColorTranslator.FromHtml("#B7DEE8");
 
         private void CreateExcelFileIfIsNotExists()
@@ -77,6 +78,7 @@ namespace MoviesParser
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             _providers = new Dictionary<string, string>();
+            #region providers
             //{
             //    {"Netflix", "/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg"},
             //    {"Prime Video", "/t/p/original/emthp39XA2YScoYL1p0sdbAH2WA.jpg"},
@@ -136,19 +138,23 @@ namespace MoviesParser
             //    {"History Play", "/t/p/original/73ms51HSpkD0OOXwj2EeiZeSqSt.jpg"}
 
             //};
-            CreateExcelFileIfIsNotExists();
-            using (var package = new ExcelPackage(_filePath))
-            {
-                var mainSheet = package.Workbook.Worksheets[0];
-                if (mainSheet.Dimension != null)
-                {
-                    rowIndex = mainSheet.Dimension.Rows;
-                }
-                else
-                {
-                    rowIndex = 1;
-                }
-            }
+            #endregion
+
+            #region ExcelCreate
+            //CreateExcelFileIfIsNotExists();
+            //using (var package = new ExcelPackage(_filePath))
+            //{
+            //    var mainSheet = package.Workbook.Worksheets[0];
+            //    if (mainSheet.Dimension != null)
+            //    {
+            //        rowIndex = mainSheet.Dimension.Rows;
+            //    }
+            //    else
+            //    {
+            //        rowIndex = 1;
+            //    }
+            //}
+            #endregion
         }
 
         private async Task<bool> IsContainsInExcel(string name, string provider)
@@ -242,7 +248,7 @@ namespace MoviesParser
                     if (!_providers.ContainsKey((string)provider[1]))
                     {
                         _providers.Add((string)provider[1], (string)provider[0]);
-
+                        await ApiClient.CreatePlatformIfIsNotExist((string)provider[1]);
                     }
                 }
                 await _page.EvaluateExpressionAsync("let arr = [];");
