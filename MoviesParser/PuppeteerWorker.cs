@@ -22,7 +22,7 @@ namespace MoviesParser
         //private Page _seriesPage;
         private LaunchOptions _options;
         private string _category;
-        int rowIndex = 1;
+        //int rowIndex = 1;
         int pageIndex = 1;
         private FileInfo _filePath;
         private string _proxy = File.ReadAllLines("settings.txt")[2];
@@ -248,7 +248,7 @@ namespace MoviesParser
                     if (!_providers.ContainsKey((string)provider[1]))
                     {
                         _providers.Add((string)provider[1], (string)provider[0]);
-                        await ApiClient.CreatePlatformIfIsNotExist((string)provider[1]);
+                        await ApiClient.CreatePlatformIfIsNotExist((string)provider[1], (string)provider[0]);
                     }
                 }
                 await _page.EvaluateExpressionAsync("let arr = [];");

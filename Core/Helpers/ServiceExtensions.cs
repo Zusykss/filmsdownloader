@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.DTOs;
+using Core.DTOs.Response;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.CustomServices;
@@ -19,6 +20,7 @@ namespace Core.Helpers
         {
             services.AddScoped<IPlatformService, PlatformService>();
             services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<ISerialService, SerialService>();
             //services.AddScoped<IAuthorService, AuthorService>();
             //services.AddScoped<ITableService, TableService>();
             //services.AddScoped<IAccountService, AccountService>();
@@ -31,6 +33,8 @@ namespace Core.Helpers
                 mc.CreateMap<Platform, PlatformDTO>().ReverseMap();
                 mc.CreateMap<Movie, MovieDTO>().ReverseMap();
                 mc.CreateMap<Serial, SerialDTO>().ReverseMap();
+                mc.CreateMap<Movie, MovieResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.Platforms.Select(p => p.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
+                mc.CreateMap<Serial, SerialResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.Platforms.Select(p => p.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
                 //mc.CreateMap<Table, TableDTO>().ReverseMap();
             });
 

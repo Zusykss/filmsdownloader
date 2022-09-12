@@ -11,7 +11,7 @@ namespace MoviesParser
     {
         static HttpClient client = new HttpClient();
         private static readonly string _apiPath = File.ReadAllLines("settings.txt")[6];//;//""
-        public static async Task CreatePlatformIfIsNotExist(string platformName)
+        public static async Task CreatePlatformIfIsNotExist(string platformName, string imageUrl)
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(_apiPath+ "Platform/addIfNotExists", new {Name = platformName});
         }

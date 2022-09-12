@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DTOs
+namespace Core.DTOs.Response
 {
-    public class SerialDTO
+    public class MovieResponseDTO
     {
         public string Name { get; set; }
         public string Url { get; set; }
-        public string Seasons { get; set; }
-        public string Series { get; set; }
-
-        //public int StatusId { get; set; }
+        public string Status { get; set; }
+        public string[] Platforms { get; set; }
     }
 }

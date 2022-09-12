@@ -1,7 +1,6 @@
 ﻿using Core.Classes;
 using Core.DTOs;
 using Core.Interfaces.CustomServices;
-using Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -10,14 +9,19 @@ namespace MoviesParserAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class SerialController : ControllerBase
     {
-        private readonly IMovieService _movieService;
+        private readonly ISerialService _serialService;
 
-        [HttpGet("getMovies")]
-        public IActionResult GetMovies([FromQuery] QueryStringParameters queryStringParameters)
+        public SerialController(ISerialService serialService)
         {
-            var movies = _movieService.GetByPage(queryStringParameters);
+            _serialService = serialService;
+        }
+
+        [HttpGet("getSerials")]
+        public IActionResult GetSerials([FromQuery] QueryStringParameters queryStringParameters)
+        {
+            var movies = _serialService.GetByPage(queryStringParameters);
             var metadata = new
             {
                 movies.TotalCount,
@@ -31,16 +35,11 @@ namespace MoviesParserAPI.Controllers
             return Ok(movies);
         }
 
-        [HttpPost("addMovie")]
-        public async Task<IActionResult> AddMovie(MovieDTO movieDTO)
+        [HttpPost("addSerial")]
+        public async Task<IActionResult> AddSerial(SerialDTO serialDTO)
         {
-            await _movieService.Add(movieDTO);
+            await _serialService.Add(serialDTO);
             return Ok();
-        }
-
-        public MovieController(IMovieService movieService)
-        {
-            _movieService = movieService;
         }
     }
 }
