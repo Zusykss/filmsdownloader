@@ -38,6 +38,11 @@ namespace MoviesParserAPI.Controllers
             return Ok();
         }
 
+        [HttpGet("getMovieByUrl")]
+        public async Task<IActionResult> GetMovieByUrl(string url)
+        {
+            return Ok(await _movieService.GetByUrl(url));
+        }
         public MovieController(IMovieService movieService)
         {
             _movieService = movieService;

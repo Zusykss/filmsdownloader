@@ -31,6 +31,12 @@ namespace Core.Services
             return new PagedList<MovieDTO>(collection, collection.Count, queryStringParameters.PageNumber, queryStringParameters.PageSize);
         }
 
+        public async Task<MovieDTO> GetByUrl(string url)
+        {
+            var movie = (await _unitOfWork.MovieRepository.Get(el => el.Url == url)).FirstOrDefault();
+            return movie == null ? null : _mapper.Map<MovieDTO>(movie);
+        }
+
         public MovieService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;

@@ -12,5 +12,6 @@ namespace Core.Interfaces.CustomServices
     {
         Task Add(MovieDTO movieDTO);
         PagedList<MovieDTO> GetByPage(QueryStringParameters queryStringParameters);
+        Task<MovieDTO> GetByUrl(string url);
     }
 }

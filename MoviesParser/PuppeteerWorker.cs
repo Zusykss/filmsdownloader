@@ -22,7 +22,7 @@ namespace MoviesParser
         //private Page _seriesPage;
         private LaunchOptions _options;
         private string _category;
-        //int rowIndex = 1;
+        int rowIndex = 1;
         int pageIndex = 1;
         private FileInfo _filePath;
         private string _proxy = File.ReadAllLines("settings.txt")[2];
@@ -335,7 +335,8 @@ namespace MoviesParser
                     await _tmpPage.WaitForSelectorAsync("li.ott_filter_best_price > div > a");
                     var links = await _tmpPage.EvaluateExpressionAsync<string[]>(
                         "Array.from(document.querySelector('ul.providers').querySelectorAll('li:not(.hide) a')).map(a => a.href)");
-                    if (await IsContainsInExcel(item, "Without platform"))
+                    if (await IsContainsInDatabase(item))
+                    //if (await IsContainsInDatabase(item, "Without platform"))
                     {
                         using (var package = new ExcelPackage(_filePath))
                         {
@@ -517,33 +518,33 @@ namespace MoviesParser
 
                                 if (_category == "tv")
                                 {
-                                    if (mainSheet.Cells[rowIndexPos, 4].Value as string != season)
-                                    {
-                                        mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                        mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
-                                            .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                        mainSheet.Cells[rowIndexPos, 4].Value = season;
-                                    }
+                                    //if (mainSheet.Cells[rowIndexPos, 4].Value as string != season)
+                                    //{
+                                    //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                    //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
+                                    //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                                    //    mainSheet.Cells[rowIndexPos, 4].Value = season;
+                                    //}
 
-                                    if (mainSheet.Cells[rowIndexPos, 5].Value as string != episode)
-                                    {
-                                        mainSheet.Cells[rowIndexPos, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                        mainSheet.Cells[rowIndexPos, 5].Style.Fill.BackgroundColor
-                                            .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                        mainSheet.Cells[rowIndexPos, 5].Value = episode;
-                                    }
+                                    //if (mainSheet.Cells[rowIndexPos, 5].Value as string != episode)
+                                    //{
+                                    //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                    //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.BackgroundColor
+                                    //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                                    //    mainSheet.Cells[rowIndexPos, 5].Value = episode;
+                                    //}
 
                                     await _tmpPage.ClickAsync("section.panel.season p.new_button");
                                     await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
                                     var sum = await _tmpPage.EvaluateExpressionAsync<int>(
                                         @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
-                                    if (mainSheet.Cells[rowIndexPos, 6].Value as int? != sum)
-                                    {
-                                        mainSheet.Cells[rowIndexPos, 6].Value = sum;
-                                    }
+                                    //if (mainSheet.Cells[rowIndexPos, 6].Value as int? != sum)
+                                    //{
+                                    //    mainSheet.Cells[rowIndexPos, 6].Value = sum;
+                                    //}
 
                                     //++rowIndex;
-                                    await package.SaveAsync();
+                                    //await package.SaveAsync();
                                 }
                             }
                         }
@@ -643,6 +644,11 @@ namespace MoviesParser
                 return false;
             }
             return true;
+        }
+
+        private async Task<bool> IsContainsInDatabase(string item)
+        {
+            return (await ApiClient.GetFilmByUrl(item)) != null;
         }
 
         private async Task<bool> DataActions()

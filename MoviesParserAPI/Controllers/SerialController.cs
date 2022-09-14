@@ -34,7 +34,11 @@ namespace MoviesParserAPI.Controllers
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(movies);
         }
-
+        [HttpGet("getSerialByUrl")]
+        public async Task<IActionResult> GetSerialByUrl(string url)
+        {
+            return Ok(await _serialService.GetByUrl(url));
+        }
         [HttpPost("addSerial")]
         public async Task<IActionResult> AddSerial(SerialDTO serialDTO)
         {
