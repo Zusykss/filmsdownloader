@@ -1,5 +1,6 @@
 ﻿using Core.Classes;
 using Core.DTOs;
+using Core.Entities;
 using Core.Interfaces.CustomServices;
 using Core.Services;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +32,14 @@ namespace MoviesParserAPI.Controllers
             return Ok(movies);
         }
 
+        [HttpPatch]
+        public async Task<IActionResult> UpdateMovie(MovieDTO movieDTO)
+        {
+            await _movieService.Edit(movieDTO);
+            return Ok();
+        }
         [HttpPost("addMovie")]
-        public async Task<IActionResult> AddMovie(MovieDTO movieDTO)
+        public async Task<IActionResult> AddMovie([FromBody] MovieDTO movieDTO)
         {
             await _movieService.Add(movieDTO);
             return Ok();

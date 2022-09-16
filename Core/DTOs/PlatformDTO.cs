@@ -9,5 +9,6 @@ namespace Core.DTOs
     public class PlatformDTO
     {
         public string Name { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

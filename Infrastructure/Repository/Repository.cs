@@ -49,6 +49,11 @@ namespace Infrastructure.Repository
             }
         }
 
+        public virtual TEntity GetFirstAsNoTracking(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return dbSet.AsNoTracking().FirstOrDefault(filter);
+        }
+
         public virtual async Task<TEntity> GetById(object id)
         {
             return await dbSet.FindAsync(id);
@@ -67,23 +72,23 @@ namespace Infrastructure.Repository
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            Task.Run(() =>
-            {
+            //Task.Run(() =>
+            //{
                 if (context.Entry(entityToDelete).State == EntityState.Detached)
                 {
                     dbSet.Attach(entityToDelete);
                 }
                 dbSet.Remove(entityToDelete);
-            });
+            //});
         }
 
         public virtual void Update(TEntity entityToUpdate)
         {
-            Task.Run(() =>
-            {
+            //Task.Run(() =>
+            //{
                 dbSet.Attach(entityToUpdate);
                 context.Entry(entityToUpdate).State = EntityState.Modified;
-            });
+            //});
         }
         public async Task SaveChangesAsync() => await context.SaveChangesAsync();
 

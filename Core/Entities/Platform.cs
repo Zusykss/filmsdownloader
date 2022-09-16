@@ -10,6 +10,7 @@ namespace Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string ImageUrl { get; set; }
         public virtual ICollection<Movie> Movies { get; set; } = new HashSet<Movie>();
         public virtual ICollection<Serial> Serials { get; set; } = new HashSet<Serial>();
     }

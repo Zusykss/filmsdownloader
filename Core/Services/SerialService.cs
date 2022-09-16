@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Classes;
 using Core.DTOs;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Interfaces;
 using Core.Interfaces.CustomServices;
 
@@ -32,6 +33,16 @@ namespace Core.Services
         {
             var serial = (await _unitOfWork.SerialRepository.Get(el => el.Url == url)).FirstOrDefault();
             return serial == null ? null : _mapper.Map<SerialDTO>(serial);
+        }
+
+        public async Task Edit(SerialDTO serialDTO)
+        {
+            if (serialDTO == null || !serialDTO.Id.HasValue)
+            {
+                throw new HttpException("Incorrect serial data!", System.Net.HttpStatusCode.BadRequest);
+            }
+            _unitOfWork.MovieRepository.Update(_mapper.Map<Movie>(serialDTO)); //D
+            await _unitOfWork.SerialRepository.SaveChangesAsync();
         }
 
         public SerialService(IUnitOfWork unitOfWork, IMapper mapper)

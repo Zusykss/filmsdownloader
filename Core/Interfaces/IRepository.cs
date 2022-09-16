@@ -15,6 +15,7 @@ namespace Core.Interfaces
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "");
         Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> filter = null);
+        TEntity GetFirstAsNoTracking(Expression<Func<TEntity, bool>> filter = null);
         Task<TEntity> GetById(object id);
         Task Insert(TEntity entity);
         Task Delete(object id);
