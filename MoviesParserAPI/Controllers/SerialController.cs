@@ -36,7 +36,7 @@ namespace MoviesParserAPI.Controllers
             return Ok(movies);
         }
         [HttpPost("setPlatformsByNames")]
-        public async Task<IActionResult> SetPlatformsByNames([FromBody] IEnumerable<string> platforms, int id)
+        public async Task<IActionResult> SetPlatformsByNames([FromBody] IEnumerable<CustomPlatform> platforms, int id)
         {
             await _serialService.SetPlatformsByNames(platforms, id);
             return Ok();

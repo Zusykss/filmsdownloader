@@ -44,5 +44,13 @@ namespace MoviesParser
         {
             await client.PostAsJsonAsync(_apiPath + "Movie/editMovie", movie);
         }
+
+        public static async Task SetSerialPlatforms(List<CustomProvider> providers, int id)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Serial/setPlatformsByNames?id=" + id, providers);
+        }public static async Task SetMoviePlatforms(List<CustomProvider> providers, int id)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Movie/setPlatformsByNames?id=" + id, providers);
+        }
     }
 }

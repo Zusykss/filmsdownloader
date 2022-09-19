@@ -324,7 +324,7 @@ namespace MoviesParser
                     episode = await _tmpPage.EvaluateExpressionAsync<string>(
                         "document.querySelector('div.season > div.flex > div.content h4').innerText");
                 }
-
+                List<CustomProvider> providers = new List<CustomProvider>();
                 //await _tmpPage.WaitForSelectorAsync("img[src|=\"/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg\"]",
                 //await _tmpPage.WaitForSelectorAsync("img[src|=\"/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg\"]",
                 // new WaitForSelectorOptions { Visible = true });
@@ -336,10 +336,6 @@ namespace MoviesParser
                     await _tmpPage.WaitForSelectorAsync("li.ott_filter_best_price > div > a");
                     var links = await _tmpPage.EvaluateExpressionAsync<string[]>(
                         "Array.from(document.querySelector('ul.providers').querySelectorAll('li:not(.hide) a')).map(a => a.href)");
-                    SerialDTO serial = null;
-                    MovieDTO movie = null;
-                    List<string> providersNames = new List<string>();
-                    List<CustomProvider> providers = new List<CustomProvider>();
                     var imagesSrc = await _tmpPage.EvaluateExpressionAsync<string[]>(
                         "Array.from(document.querySelector('ul.providers').querySelectorAll('li:not(.hide) a > img')).map(img => img.src)");
                     if (imagesSrc.Length > 0)
@@ -347,13 +343,23 @@ namespace MoviesParser
                         //providersNames.AddRange(imagesSrc.Select(GetProviderName));
                         foreach (var imgSrc in imagesSrc)
                         {
-                            providers.Add(new CustomProvider {  Name = GetProviderName()});
+                            providers.Add(new CustomProvider { Name = GetProviderName(imgSrc) });
                         }
                     }
-                    else
-                    {
+                }
+                else
+                {
+                    providers.Add(new CustomProvider { Name = "Without platform" });
+                }
+                    SerialDTO serial = null;
+                    MovieDTO movie = null;
+                    //List<string> providersNames = new List<string>();
+                    
+                    
+                    //else
+                    //{
 
-                    }
+                    //}
                     if (_category == "tv")
                     {
                         serial = await ApiClient.GetSerialByUrl(item);
@@ -375,8 +381,8 @@ namespace MoviesParser
                             serial.Name = title;
                             await ApiClient.UpdateSerial(serial);
                         }
+                        await ApiClient.SetSerialPlatforms(providers, serial.Id);
 
-                        
 
                     }
                     else
@@ -384,7 +390,7 @@ namespace MoviesParser
                         movie = await ApiClient.GetFilmByUrl(item);
                         if (movie == null)
                         {
-                            movie=new MovieDTO();
+                            movie = new MovieDTO();
                             movie.Name = title;
                             await ApiClient.AddMovie(movie);
                             movie = await ApiClient.GetFilmByUrl(movie.Url);
@@ -394,217 +400,218 @@ namespace MoviesParser
                             movie.Name = title;
                             await ApiClient.UpdateMovie(movie);
                         }
+                        await ApiClient.SetMoviePlatforms(providers, movie.Id);
 
                     }
 
                     //if (serial != null || movie != null)
                     //if (await IsContainsInDatabase(item, "Without platform"))
                     //{
-                        //if (_category == "tv")
-                        //{
-                            
-                        //}
-                        //else
-                        //{
-                        //    //movie. 
-                        //}
-                        //using (var package = new ExcelPackage(_filePath))
-                        //{
-                        //    var mainSheet =
-                        //        package.Workbook.Worksheets.First(el => el.Name == "Without platform");
-                        //    int rowIndexPos = 1;
-                        //    for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
-                        //    {
-                        //        if (mainSheet.Cells[j, 2].Value as string == item)
-                        //        {
-                        //            rowIndexPos = j;
-                        //            break;
-                        //        }
-                        //    }
+                    //if (_category == "tv")
+                    //{
 
-                            //    mainSheet.Cells[rowIndexPos, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            //    mainSheet.Cells[rowIndexPos, 1].Style.Fill.BackgroundColor
-                            //        .SetColor(ColorTranslator.FromHtml("#03f215"));
-                            //}
+                    //}
+                    //else
+                    //{
+                    //    //movie. 
+                    //}
+                    //using (var package = new ExcelPackage(_filePath))
+                    //{
+                    //    var mainSheet =
+                    //        package.Workbook.Worksheets.First(el => el.Name == "Without platform");
+                    //    int rowIndexPos = 1;
+                    //    for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
+                    //    {
+                    //        if (mainSheet.Cells[j, 2].Value as string == item)
+                    //        {
+                    //            rowIndexPos = j;
+                    //            break;
+                    //        }
+                    //    }
+
+                    //    mainSheet.Cells[rowIndexPos, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    //    mainSheet.Cells[rowIndexPos, 1].Style.Fill.BackgroundColor
+                    //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                    //}
                     //}
 
-                    if (links.Length > 1)
-                    {
+                    //if (links.Length > 1)
+                    //{
                         //Console.WriteLine("this");
                         //var imagesSrc = await _tmpPage.EvaluateExpressionAsync<string[]>(
                         //    "Array.from(document.querySelector('ul.providers').querySelectorAll('li:not(.hide) a > img')).map(img => img.src)");
 
 
-                        
+
                         //Console.ReadKey();
-                    }
-                    else
-                    {
-                        var link = await _tmpPage.EvaluateExpressionAsync<string>(
-                            "document.querySelector('li.ott_filter_best_price > div > a').href");
-                        var providerLink =
-                            await _tmpPage.EvaluateExpressionAsync<string>(
-                                "document.querySelector('li.ott_filter_best_price > div > a > img').src");
-                        var provider = GetProviderName(providerLink);
+                    //}
+                    //else
+                    //{
+                    //    var link = await _tmpPage.EvaluateExpressionAsync<string>(
+                    //        "document.querySelector('li.ott_filter_best_price > div > a').href");
+                    //    var providerLink =
+                    //        await _tmpPage.EvaluateExpressionAsync<string>(
+                    //            "document.querySelector('li.ott_filter_best_price > div > a > img').src");
+                    //    var provider = GetProviderName(providerLink);
 
-                        if (!(await IsContainsInExcel(item, provider)))
-                        {
-                            using (var package = new ExcelPackage(_filePath))
-                            {
-                                //var mainSheet = package.Workbook.Worksheets.First(el => el.Name == provider);
-                                //int rowIndexPos = 1;
-                                //if (mainSheet.Dimension != null)
-                                //{
-                                //    rowIndexPos = mainSheet.Dimension.Rows + 1;
-                                //}
+                    //    if (!(await IsContainsInExcel(item, provider)))
+                    //    {
+                    //        using (var package = new ExcelPackage(_filePath))
+                    //        {
+                    //            //var mainSheet = package.Workbook.Worksheets.First(el => el.Name == provider);
+                    //            //int rowIndexPos = 1;
+                    //            //if (mainSheet.Dimension != null)
+                    //            //{
+                    //            //    rowIndexPos = mainSheet.Dimension.Rows + 1;
+                    //            //}
 
-                                ////Console.WriteLine(rowIndexPos);
-                                //mainSheet.Cells[rowIndexPos, 3].Value = GetFinalRedirect(link);
-                                //mainSheet.Cells[rowIndexPos, 1].Value = title;
-                                //mainSheet.Cells[rowIndexPos, 2].Value = item;
-                                if (_category == "tv")
-                                {
-                                    //mainSheet.Cells[rowIndexPos, 4].Value = season;
-                                    //mainSheet.Cells[rowIndexPos, 5].Value = episode;
-                                    await _tmpPage.ClickAsync("section.panel.season p.new_button");
-                                    //await _tmpPage.WaitForNavigationAsync();
-                                    await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
-                                    var sum = await _tmpPage.EvaluateExpressionAsync<int>(
-                                        @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
-                                    //mainSheet.Cells[rowIndexPos, 6].Value = sum;
-                                }
+                    //            ////Console.WriteLine(rowIndexPos);
+                    //            //mainSheet.Cells[rowIndexPos, 3].Value = GetFinalRedirect(link);
+                    //            //mainSheet.Cells[rowIndexPos, 1].Value = title;
+                    //            //mainSheet.Cells[rowIndexPos, 2].Value = item;
+                    //            if (_category == "tv")
+                    //            {
+                    //                //mainSheet.Cells[rowIndexPos, 4].Value = season;
+                    //                //mainSheet.Cells[rowIndexPos, 5].Value = episode;
+                    //                await _tmpPage.ClickAsync("section.panel.season p.new_button");
+                    //                //await _tmpPage.WaitForNavigationAsync();
+                    //                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
+                    //                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
+                    //                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
+                    //                //mainSheet.Cells[rowIndexPos, 6].Value = sum;
+                    //            }
 
-                                ++rowIndex;
-                                await package.SaveAsync();
-                            }
-                        }
-                        else
-                        {
-                            using (var package = new ExcelPackage(_filePath))
-                            {
-                                var mainSheet = package.Workbook.Worksheets.First(el => el.Name == provider);
-                                int rowIndexPos = 1;
-                                for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
-                                {
-                                    if (mainSheet.Cells[j, 2].Value as string == item)
-                                    {
-                                        rowIndexPos = j;
-                                        break;
-                                    }
-                                }
+                    //            ++rowIndex;
+                    //            await package.SaveAsync();
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        using (var package = new ExcelPackage(_filePath))
+                    //        {
+                    //            var mainSheet = package.Workbook.Worksheets.First(el => el.Name == provider);
+                    //            int rowIndexPos = 1;
+                    //            for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
+                    //            {
+                    //                if (mainSheet.Cells[j, 2].Value as string == item)
+                    //                {
+                    //                    rowIndexPos = j;
+                    //                    break;
+                    //                }
+                    //            }
 
-                                if (_category == "tv")
-                                {
-                                    //if (mainSheet.Cells[rowIndexPos, 4].Value as string != season)
-                                    //{
-                                    //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                    //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
-                                    //        .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                    //    mainSheet.Cells[rowIndexPos, 4].Value = season;
-                                    //}
+                    //            if (_category == "tv")
+                    //            {
+                    //                //if (mainSheet.Cells[rowIndexPos, 4].Value as string != season)
+                    //                //{
+                    //                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    //                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
+                    //                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                    //                //    mainSheet.Cells[rowIndexPos, 4].Value = season;
+                    //                //}
 
-                                    //if (mainSheet.Cells[rowIndexPos, 5].Value as string != episode)
-                                    //{
-                                    //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                    //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.BackgroundColor
-                                    //        .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                    //    mainSheet.Cells[rowIndexPos, 5].Value = episode;
-                                    //}
+                    //                //if (mainSheet.Cells[rowIndexPos, 5].Value as string != episode)
+                    //                //{
+                    //                //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    //                //    mainSheet.Cells[rowIndexPos, 5].Style.Fill.BackgroundColor
+                    //                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                    //                //    mainSheet.Cells[rowIndexPos, 5].Value = episode;
+                    //                //}
 
-                                    await _tmpPage.ClickAsync("section.panel.season p.new_button");
-                                    await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
-                                    var sum = await _tmpPage.EvaluateExpressionAsync<int>(
-                                        @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
-                                    //if (mainSheet.Cells[rowIndexPos, 6].Value as int? != sum)
-                                    //{
-                                    //    mainSheet.Cells[rowIndexPos, 6].Value = sum;
-                                    //}
+                    //                await _tmpPage.ClickAsync("section.panel.season p.new_button");
+                    //                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
+                    //                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
+                    //                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
+                    //                //if (mainSheet.Cells[rowIndexPos, 6].Value as int? != sum)
+                    //                //{
+                    //                //    mainSheet.Cells[rowIndexPos, 6].Value = sum;
+                    //                //}
 
-                                    //++rowIndex;
-                                    //await package.SaveAsync();
-                                }
-                            }
-                        }
-                    }
+                    //                //++rowIndex;
+                    //                //await package.SaveAsync();
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
-                }
-                else
-                {
-                    if (!await IsSerialContainsInDatabase(item))
-                    {
-                        //using (var package = new ExcelPackage(_filePath))
-                        //{
-                        //    var mainSheet = package.Workbook.Worksheets.First(el => el.Name == "Without platform");
-                        //    int rowIndexPos = 1;
-                        //    if (mainSheet.Dimension != null)
-                        //    {
-                        //        rowIndexPos = mainSheet.Dimension.Rows + 1;
-                        //    }
+                
+                //else
+                //{
+                //    if (!await IsSerialContainsInDatabase(item))
+                //    {
+                //        //using (var package = new ExcelPackage(_filePath))
+                //        //{
+                //        //    var mainSheet = package.Workbook.Worksheets.First(el => el.Name == "Without platform");
+                //        //    int rowIndexPos = 1;
+                //        //    if (mainSheet.Dimension != null)
+                //        //    {
+                //        //        rowIndexPos = mainSheet.Dimension.Rows + 1;
+                //        //    }
 
-                        //    mainSheet.Cells[rowIndexPos, 1].Value = title;
-                        //    mainSheet.Cells[rowIndexPos, 2].Value = item;
-                            if (_category == "tv")
-                            {
-                                //mainSheet.Cells[rowIndexPos, 3].Value = season;
-                                //mainSheet.Cells[rowIndexPos, 4].Value = episode;
-                                await _tmpPage.ClickAsync("section.panel.season p.new_button");
-                                //await _tmpPage.WaitForNavigationAsync();
-                                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
-                                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
-                                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
-                                //mainSheet.Cells[rowIndexPos, 5].Value = sum;
-                            }
+                //        //    mainSheet.Cells[rowIndexPos, 1].Value = title;
+                //        //    mainSheet.Cells[rowIndexPos, 2].Value = item;
+                //            if (_category == "tv")
+                //            {
+                //                //mainSheet.Cells[rowIndexPos, 3].Value = season;
+                //                //mainSheet.Cells[rowIndexPos, 4].Value = episode;
+                //                await _tmpPage.ClickAsync("section.panel.season p.new_button");
+                //                //await _tmpPage.WaitForNavigationAsync();
+                //                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
+                //                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
+                //                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
+                //                //mainSheet.Cells[rowIndexPos, 5].Value = sum;
+                //            }
 
-                            //await package.SaveAsync();
-                        //KC}
-                    }
-                    else
-                    {
-                        //using (var package = new ExcelPackage(_filePath))
-                        //{
-                        //    var mainSheet = package.Workbook.Worksheets.First(el => el.Name == "Without platform");
-                        //    int rowIndexPos = 1;
-                        //    for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
-                        //    {
-                        //        if (mainSheet.Cells[j, 2].Value as string == item)
-                        //        {
-                        //            rowIndexPos = j;
-                        //            break;
-                        //        }
-                        //    }
+                //            //await package.SaveAsync();
+                //        //KC}
+                //    }
+                //    else
+                //    {
+                //        //using (var package = new ExcelPackage(_filePath))
+                //        //{
+                //        //    var mainSheet = package.Workbook.Worksheets.First(el => el.Name == "Without platform");
+                //        //    int rowIndexPos = 1;
+                //        //    for (int j = 1; j <= mainSheet.Dimension.Rows; j++)
+                //        //    {
+                //        //        if (mainSheet.Cells[j, 2].Value as string == item)
+                //        //        {
+                //        //            rowIndexPos = j;
+                //        //            break;
+                //        //        }
+                //        //    }
 
-                            if (_category == "tv")
-                            {
-                                //if (mainSheet.Cells[rowIndexPos, 3].Value as string != season)
-                                //{
-                                //    mainSheet.Cells[rowIndexPos, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                //    mainSheet.Cells[rowIndexPos, 3].Style.Fill.BackgroundColor
-                                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                //    mainSheet.Cells[rowIndexPos, 3].Value = season;
-                                //}
+                //            if (_category == "tv")
+                //            {
+                //                //if (mainSheet.Cells[rowIndexPos, 3].Value as string != season)
+                //                //{
+                //                //    mainSheet.Cells[rowIndexPos, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                //                //    mainSheet.Cells[rowIndexPos, 3].Style.Fill.BackgroundColor
+                //                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                //                //    mainSheet.Cells[rowIndexPos, 3].Value = season;
+                //                //}
 
-                                //if (mainSheet.Cells[rowIndexPos, 4].Value as string != episode)
-                                //{
-                                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
-                                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
-                                //    mainSheet.Cells[rowIndexPos, 4].Value = episode;
-                                //}
+                //                //if (mainSheet.Cells[rowIndexPos, 4].Value as string != episode)
+                //                //{
+                //                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                //                //    mainSheet.Cells[rowIndexPos, 4].Style.Fill.BackgroundColor
+                //                //        .SetColor(ColorTranslator.FromHtml("#03f215"));
+                //                //    mainSheet.Cells[rowIndexPos, 4].Value = episode;
+                //                //}
 
-                                await _tmpPage.ClickAsync("section.panel.season p.new_button");
-                                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
-                                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
-                                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
-                                //if (mainSheet.Cells[rowIndexPos, 5].Value as int? != sum)
-                                //{
-                                //    mainSheet.Cells[rowIndexPos, 5].Value = sum;
-                                //}
-                            }
+                //                await _tmpPage.ClickAsync("section.panel.season p.new_button");
+                //                await _tmpPage.WaitForSelectorAsync("div.season_wrapper h4");
+                //                var sum = await _tmpPage.EvaluateExpressionAsync<int>(
+                //                    @"Array.from(document.querySelectorAll('div.season_wrapper h4')).map(h4 => +(h4.innerText.substring(h4.innerText.indexOf('|')+2)).match(/\d+/g)).reduce((partialSum, a) => partialSum + a, 0)");
+                //                //if (mainSheet.Cells[rowIndexPos, 5].Value as int? != sum)
+                //                //{
+                //                //    mainSheet.Cells[rowIndexPos, 5].Value = sum;
+                //                //}
+                //            }
 
-                            //++rowIndex;
-                            //await package.SaveAsync();
-                        }
-                    }
+                //            //++rowIndex;
+                //            //await package.SaveAsync();
+                //        }
+            
                 //}
 
                 //if (await _tmpPage.QuerySelectorAsync("ul.providers") != null)
@@ -612,9 +619,9 @@ namespace MoviesParser
 
                 //}
                 await _tmpPage.CloseAsync();
-
-                //;
             }
+                //;
+            
             catch (Exception ex)
             {
                 Console.WriteLine(DateTime.UtcNow + " " + ex.Message + " on " + item);
