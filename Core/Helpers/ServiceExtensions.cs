@@ -33,8 +33,8 @@ namespace Core.Helpers
                 mc.CreateMap<Platform, PlatformDTO>().ReverseMap();
                 mc.CreateMap<Movie, MovieDTO>().ReverseMap();
                 mc.CreateMap<Serial, SerialDTO>().ReverseMap();
-                mc.CreateMap<Movie, MovieResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.Platforms.Select(p => p.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
-                mc.CreateMap<Serial, SerialResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.Platforms.Select(p => p.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
+                mc.CreateMap<Movie, MovieResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.PlatformsMovies.Select(p => p.Movie.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
+                mc.CreateMap<Serial, SerialResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.PlatformsSerials.Select(p => p.Serial.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
                 //mc.CreateMap<Table, TableDTO>().ReverseMap();
             });
 

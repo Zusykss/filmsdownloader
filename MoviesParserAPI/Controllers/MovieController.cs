@@ -32,10 +32,16 @@ namespace MoviesParserAPI.Controllers
             return Ok(movies);
         }
 
-        [HttpPatch]
+        [HttpPost("editMovie")]
         public async Task<IActionResult> UpdateMovie(MovieDTO movieDTO)
         {
             await _movieService.Edit(movieDTO);
+            return Ok();
+        }
+        [HttpPost("setPlatformsByNames")]
+        public async Task<IActionResult> SetPlatformsByNames([FromBody]IEnumerable<CustomPlatform> platforms, int id)
+        {
+            await _movieService.SetPlatformsByNames(platforms, id);
             return Ok();
         }
         [HttpPost("addMovie")]

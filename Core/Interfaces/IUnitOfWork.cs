@@ -13,6 +13,8 @@ namespace Core.Interfaces
         IRepository<Platform> PlatformRepository { get; }
         IRepository<Serial> SerialRepository { get; }
         IRepository<Status> StatusRepository { get; }
+        IRepository<PlatformMovie> PlatformMovieRepository { get; }
+        IRepository<PlatformSerial> PlatformSerialRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

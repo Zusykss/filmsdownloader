@@ -13,7 +13,9 @@ namespace Core.DTOs
         public string Url { get; set; }
         public string Seasons { get; set; }
         public string Series { get; set; }
+        public string Notes { get; set; }
 
+        public bool IsUpdated { get; set; }
         //public int StatusId { get; set; }
     }
 }

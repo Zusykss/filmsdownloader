@@ -18,6 +18,8 @@ namespace Infrastructure.Repository
         private IRepository<Status> _statusRepository;
         private IRepository<Serial> _serialRepository;
         private IRepository<Movie> _movieRepository;
+        private IRepository<PlatformMovie> _platformMovieRepository;
+        private IRepository<PlatformSerial> _platformSerialRepository;
         public UnitOfWork(ApplicationContext context) { _context = context; } // CTOR
         // GET FOR REPOSITORY
         public IRepository<Platform> PlatformRepository
@@ -27,6 +29,24 @@ namespace Infrastructure.Repository
                 if (_platformRepository == null)
                     _platformRepository = new Repository<Platform>(_context);
                 return _platformRepository;
+            }
+        }
+        public IRepository<PlatformMovie> PlatformMovieRepository
+        {
+            get
+            {
+                if (_platformMovieRepository == null)
+                    _platformMovieRepository = new Repository<PlatformMovie>(_context);
+                return _platformMovieRepository;
+            }
+        }
+        public IRepository<PlatformSerial> PlatformSerialRepository
+        {
+            get
+            {
+                if (_platformSerialRepository == null)
+                    _platformSerialRepository = new Repository<PlatformSerial>(_context);
+                return _platformSerialRepository;
             }
         }
         public IRepository<Status> StatusRepository

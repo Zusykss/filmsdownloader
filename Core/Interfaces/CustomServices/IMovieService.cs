@@ -14,5 +14,6 @@ namespace Core.Interfaces.CustomServices
         PagedList<MovieDTO> GetByPage(QueryStringParameters queryStringParameters);
         Task<MovieDTO> GetByUrl(string url);
         Task Edit(MovieDTO movieDTO);
+        Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id);
     }
 }

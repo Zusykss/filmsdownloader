@@ -8,8 +8,11 @@ namespace MoviesParser.DTO_s
 {
     public class SerialDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsUpdated { get; set; }
         public string Url { get; set; }
+        public string Notes { get; set; }
         public string Seasons { get; set; }
         public string Series { get; set; }
     }

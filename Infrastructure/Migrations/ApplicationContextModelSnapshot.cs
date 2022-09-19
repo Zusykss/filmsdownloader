@@ -33,6 +33,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("ParseTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -66,6 +69,65 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Platforms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Without platform"
+                        });
+                });
+
+            modelBuilder.Entity("Core.Entities.PlatformMovie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlatformId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("PlatformId");
+
+                    b.ToTable("PlatformMovies");
+                });
+
+            modelBuilder.Entity("Core.Entities.PlatformSerial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PlatformId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SerialId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlatformId");
+
+                    b.HasIndex("SerialId");
+
+                    b.ToTable("PlatformSerials");
                 });
 
             modelBuilder.Entity("Core.Entities.Serial", b =>
@@ -76,7 +138,13 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsUpdated")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ParseTime")
@@ -140,36 +208,6 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MoviePlatform", b =>
-                {
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PlatformsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("MoviesId", "PlatformsId");
-
-                    b.HasIndex("PlatformsId");
-
-                    b.ToTable("MoviePlatform");
-                });
-
-            modelBuilder.Entity("PlatformSerial", b =>
-                {
-                    b.Property<int>("PlatformsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SerialsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PlatformsId", "SerialsId");
-
-                    b.HasIndex("SerialsId");
-
-                    b.ToTable("PlatformSerial");
-                });
-
             modelBuilder.Entity("Core.Entities.Movie", b =>
                 {
                     b.HasOne("Core.Entities.Status", "Status")
@@ -179,6 +217,44 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Core.Entities.PlatformMovie", b =>
+                {
+                    b.HasOne("Core.Entities.Movie", "Movie")
+                        .WithMany("PlatformsMovies")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Platform", "Platform")
+                        .WithMany("PlatformsMovies")
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("Platform");
+                });
+
+            modelBuilder.Entity("Core.Entities.PlatformSerial", b =>
+                {
+                    b.HasOne("Core.Entities.Platform", "Platform")
+                        .WithMany("PlatformsSerials")
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Serial", "Serial")
+                        .WithMany("PlatformsSerials")
+                        .HasForeignKey("SerialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Platform");
+
+                    b.Navigation("Serial");
                 });
 
             modelBuilder.Entity("Core.Entities.Serial", b =>
@@ -192,34 +268,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("MoviePlatform", b =>
+            modelBuilder.Entity("Core.Entities.Movie", b =>
                 {
-                    b.HasOne("Core.Entities.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entities.Platform", null)
-                        .WithMany()
-                        .HasForeignKey("PlatformsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PlatformsMovies");
                 });
 
-            modelBuilder.Entity("PlatformSerial", b =>
+            modelBuilder.Entity("Core.Entities.Platform", b =>
                 {
-                    b.HasOne("Core.Entities.Platform", null)
-                        .WithMany()
-                        .HasForeignKey("PlatformsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PlatformsMovies");
 
-                    b.HasOne("Core.Entities.Serial", null)
-                        .WithMany()
-                        .HasForeignKey("SerialsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PlatformsSerials");
+                });
+
+            modelBuilder.Entity("Core.Entities.Serial", b =>
+                {
+                    b.Navigation("PlatformsSerials");
                 });
 #pragma warning restore 612, 618
         }

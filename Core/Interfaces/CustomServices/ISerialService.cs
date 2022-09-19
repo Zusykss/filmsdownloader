@@ -14,5 +14,6 @@ namespace Core.Interfaces.CustomServices
         PagedList<SerialDTO> GetByPage(QueryStringParameters queryStringParameters);
         Task<SerialDTO> GetByUrl(string url);
         Task Edit(SerialDTO serialDTO);
+        Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id);
     }
 }

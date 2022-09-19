@@ -56,6 +56,22 @@ namespace Core.Services
             await _unitOfWork.MovieRepository.SaveChangesAsync();
         }
 
+        public async Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id)
+        {
+            var movie = await _unitOfWork.MovieRepository.GetById(id);
+            movie.PlatformsMovies.Clear(); 
+            var platformsModels = (await _unitOfWork.PlatformRepository.Get(el => platforms.Any(p => p.Name == el.Name))).ToHashSet();
+            foreach (var plat in platformsModels)
+            {
+                await _unitOfWork.PlatformMovieRepository.Insert(new PlatformMovie{ Movie = movie, Platform = plat});
+            }
+            //_unitOfWork.MovieRepository.Update(movie);
+            //await _unitOfWork.SaveChangesAsync();
+            //movie.PlatformsMovies =
+            // 
+            await _unitOfWork.SaveChangesAsync();
+        }
+
 
         public MovieService(IUnitOfWork unitOfWork, IMapper mapper)
         {

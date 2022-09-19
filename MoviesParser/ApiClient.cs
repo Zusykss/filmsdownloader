@@ -26,5 +26,23 @@ namespace MoviesParser
         {
             return await client.GetFromJsonAsync<SerialDTO>(_apiPath + $"Serial/getSerialByUrl?url={url}");
         }
+
+        public static async Task AddSerial(SerialDTO serial)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Serial/addSerial", serial);
+        }
+        public static async Task AddMovie(MovieDTO movie)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Movie/addMovie", movie);
+        }
+
+        public static async Task UpdateSerial(SerialDTO serial)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Serial/editSerial", serial);
+        }
+        public static async Task UpdateMovie(MovieDTO movie)
+        {
+            await client.PostAsJsonAsync(_apiPath + "Movie/editMovie", movie);
+        }
     }
 }

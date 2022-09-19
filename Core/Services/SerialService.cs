@@ -45,6 +45,18 @@ namespace Core.Services
             await _unitOfWork.SerialRepository.SaveChangesAsync();
         }
 
+        public async Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id)
+        {
+            var serial = await _unitOfWork.SerialRepository.GetById(id);
+            serial.PlatformsSerials.Clear();
+            var platformsModels = (await _unitOfWork.PlatformRepository.Get(el => platforms.Any(p => p.Name == el.Name))).ToHashSet();
+            foreach (var plat in platformsModels)
+            {
+                await _unitOfWork.PlatformSerialRepository.Insert(new PlatformSerial { Serial = serial, Platform = plat });
+            }
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public SerialService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;

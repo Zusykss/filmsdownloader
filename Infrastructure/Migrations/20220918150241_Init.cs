@@ -16,7 +16,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,8 +45,9 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Url = table.Column<string>(type: "text", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true),
                     StatusId = table.Column<int>(type: "integer", nullable: false),
-                    ParseTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    ParseTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,10 +68,12 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Url = table.Column<string>(type: "text", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true),
                     Seasons = table.Column<string>(type: "text", nullable: true),
                     Series = table.Column<string>(type: "text", nullable: true),
+                    IsUpdated = table.Column<bool>(type: "boolean", nullable: false),
                     StatusId = table.Column<int>(type: "integer", nullable: false),
-                    ParseTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    ParseTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,52 +87,63 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MoviePlatform",
+                name: "PlatformMovies",
                 columns: table => new
                 {
-                    MoviesId = table.Column<int>(type: "integer", nullable: false),
-                    PlatformsId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PlatformId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoviePlatform", x => new { x.MoviesId, x.PlatformsId });
+                    table.PrimaryKey("PK_PlatformMovies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MoviePlatform_Movies_MoviesId",
-                        column: x => x.MoviesId,
+                        name: "FK_PlatformMovies_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MoviePlatform_Platforms_PlatformsId",
-                        column: x => x.PlatformsId,
+                        name: "FK_PlatformMovies_Platforms_PlatformId",
+                        column: x => x.PlatformId,
                         principalTable: "Platforms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlatformSerial",
+                name: "PlatformSerials",
                 columns: table => new
                 {
-                    PlatformsId = table.Column<int>(type: "integer", nullable: false),
-                    SerialsId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PlatformId = table.Column<int>(type: "integer", nullable: false),
+                    SerialId = table.Column<int>(type: "integer", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlatformSerial", x => new { x.PlatformsId, x.SerialsId });
+                    table.PrimaryKey("PK_PlatformSerials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlatformSerial_Platforms_PlatformsId",
-                        column: x => x.PlatformsId,
+                        name: "FK_PlatformSerials_Platforms_PlatformId",
+                        column: x => x.PlatformId,
                         principalTable: "Platforms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PlatformSerial_Serials_SerialsId",
-                        column: x => x.SerialsId,
+                        name: "FK_PlatformSerials_Serials_SerialId",
+                        column: x => x.SerialId,
                         principalTable: "Serials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Platforms",
+                columns: new[] { "Id", "ImageUrl", "Name" },
+                values: new object[] { 1, null, "Without platform" });
 
             migrationBuilder.InsertData(
                 table: "Statuses",
@@ -138,13 +153,8 @@ namespace Infrastructure.Migrations
                     { 1, "Downloaded" },
                     { 2, "Downloading" },
                     { 3, "None" },
-                    { 4, "Isn`t donwloaded" }
+                    { 4, "Isn`t downloaded" }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MoviePlatform_PlatformsId",
-                table: "MoviePlatform",
-                column: "PlatformsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_StatusId",
@@ -152,9 +162,24 @@ namespace Infrastructure.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlatformSerial_SerialsId",
-                table: "PlatformSerial",
-                column: "SerialsId");
+                name: "IX_PlatformMovies_MovieId",
+                table: "PlatformMovies",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlatformMovies_PlatformId",
+                table: "PlatformMovies",
+                column: "PlatformId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlatformSerials_PlatformId",
+                table: "PlatformSerials",
+                column: "PlatformId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlatformSerials_SerialId",
+                table: "PlatformSerials",
+                column: "SerialId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Serials_StatusId",
@@ -165,10 +190,10 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MoviePlatform");
+                name: "PlatformMovies");
 
             migrationBuilder.DropTable(
-                name: "PlatformSerial");
+                name: "PlatformSerials");
 
             migrationBuilder.DropTable(
                 name: "Movies");
