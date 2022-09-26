@@ -19,6 +19,17 @@ namespace MoviesParserAPI.Controllers
             return Ok();
         }
 
+        [HttpGet("getById")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            return Ok(await _platformService.GetPlatformById(id));
+        }
+
+        [HttpGet("getAllPlatforms")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _platformService.GetAllPlatforms());
+        }
         public PlatformController(IPlatformService platformService)
         {
             _platformService = platformService;

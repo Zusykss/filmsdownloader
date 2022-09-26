@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DTOs
+namespace MoviesParser.DTO_s
 {
     public class PlatformDTO
     {

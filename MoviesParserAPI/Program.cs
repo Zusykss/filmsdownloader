@@ -1,4 +1,5 @@
 using Core.Helpers;
+using Core.Helpers.Options;
 using Infrastructure.Data;
 using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomServices();
-
+builder.Services.Configure<ParserSettings>(builder.Configuration.GetSection(nameof(ParserSettings)));
 builder.Services.AddUnitOfWork();
 
 builder.Services.AddRepository();
@@ -27,7 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(options =>
+    options.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

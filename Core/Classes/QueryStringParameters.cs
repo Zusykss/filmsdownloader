@@ -22,5 +22,7 @@ namespace Core.Classes
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+
+        public string QuerySearch { get; set; }
     }
 }

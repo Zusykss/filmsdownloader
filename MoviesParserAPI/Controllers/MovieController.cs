@@ -16,20 +16,21 @@ namespace MoviesParserAPI.Controllers
         private readonly IMovieService _movieService;
 
         [HttpGet("getMovies")]
-        public IActionResult GetMovies([FromQuery] QueryStringParameters queryStringParameters)
+        public async Task<IActionResult> GetMovies([FromQuery] QueryStringParameters queryStringParameters)
         {
-            var movies = _movieService.GetByPage(queryStringParameters);
-            var metadata = new
-            {
-                movies.TotalCount,
-                movies.PageSize,
-                movies.CurrentPage,
-                movies.TotalPages,
-                movies.HasNext,
-                movies.HasPrevious
-            };
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            return Ok(movies);
+            var movies = await _movieService.GetByPage(queryStringParameters);
+            //var metadata = new
+            //{
+            //    movies.TotalCount,
+            //    movies.PageSize,
+            //    movies.CurrentPage,
+            //    movies.TotalPages,
+            //    movies.HasNext,
+            //    movies.HasPrevious
+            //};
+            //HttpContext.Current.Response.Headers.Add("Paging-Headers", JsonConvert.SerializeObject(paginationMetadata));
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(movies.Metadata));
+            return Ok(movies.Items);
         }
 
         [HttpPost("editMovie")]

@@ -25,6 +25,13 @@ namespace Core.Services
             }
         }
 
+        public async Task<IEnumerable<PlatformDTO>> GetAllPlatforms()
+        {
+            return  (_mapper.Map<IEnumerable< PlatformDTO>>(await _unitOfWork.PlatformRepository.Get()));
+        }
+
+        public async Task<PlatformDTO> GetPlatformById(int id) => _mapper.Map<PlatformDTO>(await _unitOfWork.PlatformRepository.GetById(id));
+
         public PlatformService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;

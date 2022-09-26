@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using MoviesParser.DTO_s;
 using MoviesParser.Enums;
+using Newtonsoft.Json;
 
 namespace MoviesParser
 {
@@ -20,11 +22,17 @@ namespace MoviesParser
 
         public static async Task<MovieDTO> GetFilmByUrl(string url)
         {
-            return await client.GetFromJsonAsync<MovieDTO>(_apiPath + $"Movie/getMovieByUrl?url={url}");
+            var movieJson = await client.GetStringAsync(_apiPath + $"Movie/getMovieByUrl?url={url}");
+            var result = String.IsNullOrEmpty(movieJson) ? null : JsonConvert.DeserializeObject<MovieDTO>(movieJson);
+            return result;
+            //return await client.GetFromJsonAsync<MovieDTO>(_apiPath + $"Movie/getMovieByUrl?url={url}");
         }
         public static async Task<SerialDTO> GetSerialByUrl(string url)
         {
-            return await client.GetFromJsonAsync<SerialDTO>(_apiPath + $"Serial/getSerialByUrl?url={url}");
+            var serialJson = await client.GetStringAsync(_apiPath + $"Serial/getSerialByUrl?url={url}");
+            var result = String.IsNullOrEmpty(serialJson) ? null : JsonConvert.DeserializeObject<SerialDTO>(serialJson);
+            return result;
+            //return await client.GetFromJsonAsync<SerialDTO>(_apiPath + $"Serial/getSerialByUrl?url={url}");
         }
 
         public static async Task AddSerial(SerialDTO serial)
@@ -51,6 +59,11 @@ namespace MoviesParser
         }public static async Task SetMoviePlatforms(List<CustomProvider> providers, int id)
         {
             await client.PostAsJsonAsync(_apiPath + "Movie/setPlatformsByNames?id=" + id, providers);
+        }
+
+        public static async Task<PlatformDTO> GetPlatformById(int platformId)
+        {
+            return await client.GetFromJsonAsync<PlatformDTO>(_apiPath + $"Platform/getById?id={platformId}");
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Core.Helpers
             services.AddScoped<IPlatformService, PlatformService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ISerialService, SerialService>();
+            services.AddScoped<IParserService, ParserService>();
             //services.AddScoped<IAuthorService, AuthorService>();
             //services.AddScoped<ITableService, TableService>();
             //services.AddScoped<IAccountService, AccountService>();

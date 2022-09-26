@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using MoviesParser.DTO_s;
+using MoviesParser.Helpers;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Page = PuppeteerSharp.Page;
@@ -17,12 +18,15 @@ namespace MoviesParser
 {
     public class PuppeteerWorker
     {
+        private readonly ParserStartConfiguration _configuration;
+        private int? maxCount = null;
+        private int counter = 0;
         private Browser _browser;
         private Page _page;
         private Page _tmpPage;
         //private Page _seriesPage;
         private LaunchOptions _options;
-        private string _category;
+        //private string _category;
         int rowIndex = 1;
         int pageIndex = 1;
         private FileInfo _filePath;
@@ -48,8 +52,9 @@ namespace MoviesParser
 
         }
 
-        public PuppeteerWorker(string category = "movie")
+        public PuppeteerWorker(ParserStartConfiguration configuration)//string category = "movie"
         {
+            _configuration = configuration;
             _options = new LaunchOptions
             {
                 Headless = false,
@@ -73,7 +78,7 @@ namespace MoviesParser
                 ExecutablePath = File.ReadAllLines("settings.txt")[0]
 
             };
-            _category = category;
+            //_category = category;
             //_filePath = new FileInfo(File.ReadAllLines("settings.txt")[1]);
             // Ставимо ліцензію (не комерційну) на OfficeOpenXml
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -196,7 +201,7 @@ namespace MoviesParser
 
         public async Task Start()
         {
-            await BrowserLoader($"https://www.themoviedb.org/{_category}", 5);
+            await BrowserLoader($"https://www.themoviedb.org/{_configuration.ParserStartCategory}", 5);//_category
         }
         public async Task InitBrowserAsync()
         {
@@ -252,11 +257,31 @@ namespace MoviesParser
                         await ApiClient.CreatePlatformIfIsNotExist((string)provider[1], (string)provider[0]);
                     }
                 }
+
+                if (_configuration.Platforms != null)
+                {
+                    foreach (var platformId in _configuration.Platforms)
+                    {
+                        try
+                        {
+                            var platformSrc = (await ApiClient.GetPlatformById(platformId)).ImageUrl.Substring(26);
+                            if (platformSrc != null && await _page.EvaluateExpressionAsync<bool>($"document.querySelectorAll('img[src|=\"{platformSrc}\"]').length > 0"))
+                            {
+                                await _page.ClickAsync($"img[src|=\"{platformSrc}\"");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+
                 await _page.EvaluateExpressionAsync("let arr = [];");
                 //Console.WriteLine(providersImages[0]);
                 //Thread.Sleep(3000);
                 //await _page.ClickAsync("img[src|=\"/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg\"]");
-                //await _page.Mouse.ClickAsync(388, 568, null);
+                await _page.Mouse.ClickAsync(388, 568, null);
                 Thread.Sleep(2000);
             }
             catch (Exception ex)
@@ -317,7 +342,7 @@ namespace MoviesParser
                 //Console.ReadKey();
                 var title = await _tmpPage.EvaluateExpressionAsync<string>(query);
                 //Console.ReadKey();
-                if (_category == "tv")
+                if (_configuration.ParserStartCategory == "tv")//_category == "tv"
                 {
                     season = await _tmpPage.EvaluateExpressionAsync<string>(
                         "document.querySelector('div.season > div.flex > div.content h2').innerText");
@@ -360,25 +385,29 @@ namespace MoviesParser
                     //{
 
                     //}
-                    if (_category == "tv")
+                    if (_configuration.ParserStartCategory == "tv")//_category == "tv"
                     {
                         serial = await ApiClient.GetSerialByUrl(item);
                         if (serial == null)
                         {
                             serial = new SerialDTO();
                             serial.Name = title;
-                            await ApiClient.AddSerial(serial);
+                             serial.Url = item;
+                             serial.Seasons = season;
+                             serial.Series = episode;
+                        await ApiClient.AddSerial(serial);
                             serial = await ApiClient.GetSerialByUrl(serial.Url);
                         }
                         else
                         {
-                            if (serial.Seasons != null && serial.Series != null && (serial.Seasons != season || serial.Series != episode))
-                            {
+                            if ((serial.Seasons != season || serial.Series != episode))//serial.Seasons != null && serial.Series != null && 
+                        {
                                 serial.IsUpdated = true;
                                 serial.Seasons = season;
                                 serial.Series = episode;
                             }
                             serial.Name = title;
+                            serial.Url = item;
                             await ApiClient.UpdateSerial(serial);
                         }
                         await ApiClient.SetSerialPlatforms(providers, serial.Id);
@@ -392,6 +421,7 @@ namespace MoviesParser
                         {
                             movie = new MovieDTO();
                             movie.Name = title;
+                            movie.Url = item;
                             await ApiClient.AddMovie(movie);
                             movie = await ApiClient.GetFilmByUrl(movie.Url);
                         }
@@ -625,6 +655,8 @@ namespace MoviesParser
             catch (Exception ex)
             {
                 Console.WriteLine(DateTime.UtcNow + " " + ex.Message + " on " + item);
+                Console.WriteLine(ex.StackTrace);
+                await _tmpPage.CloseAsync();
                 return false;
             }
             return true;
@@ -653,21 +685,29 @@ namespace MoviesParser
                 //Console.WriteLine(String.Join(' ', urls));
                 //Console.WriteLine(pageIndex);
                 urls = urls.Where(url =>
-                    !url.Contains($"https://www.themoviedb.org/{_category}?page=") &&
-                    !url.Contains($"https://www.themoviedb.org/{_category}#")).ToArray();
+                    !url.Contains($"https://www.themoviedb.org/{_configuration.ParserStartCategory}?page=") && //_category
+                    !url.Contains($"https://www.themoviedb.org/{_configuration.ParserStartCategory}#")).ToArray(); //_category
                 if (!urls.Any())
                 {
                     Console.WriteLine("Page haven`t urls");
                 }
 
                 //if (pageIndex > 50)
-                //{
-                    foreach (var item in urls)
-                    {
-                        await ExecuteData(item);
-                    }
-                //}
+
+               // Console.WriteLine(_configuration.Count);
                 
+                foreach (var item in urls)
+                {
+                    if (_configuration.Count.HasValue && counter >= _configuration.Count)
+                    {
+                        await _browser.CloseAsync();
+                        Environment.Exit(0);
+                    }
+                    await ExecuteData(item);
+                    ++counter;
+                }
+                //}
+
 
                 await _page.EvaluateExpressionAsync("window.scrollBy(0, document.body.scrollHeight)");
                 Thread.Sleep(1000);
@@ -683,7 +723,8 @@ namespace MoviesParser
             {
                 await _page.EvaluateExpressionAsync("window.scrollBy(0, document.body.scrollHeight)");
                 Console.WriteLine(DateTime.UtcNow + " " + ex.Message);
-                await _tmpPage.CloseAsync();
+                Console.WriteLine(ex.StackTrace);
+                await _tmpPage?.CloseAsync()!;
                 return false;
             }
             return true;

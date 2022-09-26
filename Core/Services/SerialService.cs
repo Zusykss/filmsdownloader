@@ -41,7 +41,7 @@ namespace Core.Services
             {
                 throw new HttpException("Incorrect serial data!", System.Net.HttpStatusCode.BadRequest);
             }
-            _unitOfWork.MovieRepository.Update(_mapper.Map<Movie>(serialDTO)); //D
+            _unitOfWork.SerialRepository.Update(_mapper.Map<Serial>(serialDTO)); //D
             await _unitOfWork.SerialRepository.SaveChangesAsync();
         }
 
@@ -49,10 +49,19 @@ namespace Core.Services
         {
             var serial = await _unitOfWork.SerialRepository.GetById(id);
             serial.PlatformsSerials.Clear();
-            var platformsModels = (await _unitOfWork.PlatformRepository.Get(el => platforms.Any(p => p.Name == el.Name))).ToHashSet();
-            foreach (var plat in platformsModels)
+            //var platformsModels = (await _unitOfWork.PlatformRepository.Get(el => platforms.Any(p => p.Name == el.Name))).ToHashSet();
+            //foreach (var plat in platformsModels)
+            //{
+            //    await _unitOfWork.PlatformSerialRepository.Insert(new PlatformSerial { Serial = serial, Platform = plat });
+            //}
+            var platformsEntities = await _unitOfWork.PlatformRepository.Get();
+            foreach (var platform in platforms)
             {
-                await _unitOfWork.PlatformSerialRepository.Insert(new PlatformSerial { Serial = serial, Platform = plat });
+                var pl = platformsEntities.FirstOrDefault(el => el.Name == platform.Name);
+                if (pl != null)
+                {
+                    await _unitOfWork.PlatformSerialRepository.Insert(new PlatformSerial { Serial = serial, Platform = pl, Url = platform.Url });
+                }
             }
             await _unitOfWork.SaveChangesAsync();
         }
