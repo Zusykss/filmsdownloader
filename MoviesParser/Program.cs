@@ -14,7 +14,7 @@ Console.WriteLine("Started");
 
 ParserStartConfiguration configuration = new ParserStartConfiguration();
 var category = args[0];
-configuration.ParserStartCategory = category.Substring(category.IndexOf('=')) == "1" ? "movie" : "tv";
+configuration.ParserStartCategory = category.Substring(category.IndexOf('=') + 1) == "1" ? "movie" : "tv";
     //var platformsArgs = 
 if (args.Length > 1 && args[1].Contains("platforms"))
 {

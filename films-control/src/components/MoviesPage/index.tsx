@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { IMovie, IPaginationFilterModel } from "./types";
 import axios from "axios";
 import http from "../../http_common";
+import Pagination from "../pagination";
 export interface IGetMovieResponse {
   movies: IMovie[];
 }
@@ -15,6 +16,7 @@ const MoviesPage = () => {
     pageSize: 20,
   };
 
+  let headerss : any =null;
   const getMoviesToState = () => {
     //paginationFilterModel : IPaginationFilterModel
     let url: string =
@@ -30,6 +32,10 @@ const MoviesPage = () => {
       .get<IMovie[]>(url)
       .then((data) => {
         //console.log(data.data);
+        //setCurrentPage(data.headers)
+        console.log(data);
+        headerss = data.headers;
+        console.log(data.headers["x-pagination"]);
         setMovies(data.data);
       })
       .catch((err) => {
@@ -39,6 +45,7 @@ const MoviesPage = () => {
     //return resp.then(r => setMovies(r.data));
   };
   const [movies, setMovies] = useState<IMovie[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1); // first page
   useEffect(() => {
     // async function fetchData(){
     //   setMovies(await getMovies(paginationFilterModel)); //(await (await getMovies(paginationFilterModel)).data)
@@ -48,27 +55,28 @@ const MoviesPage = () => {
     //   getMoviesToState();//paginationFilterModel
     //   alert("t");
     // }, 2000)
-    let url: string =
-      "Movie/getMovies?PageNumber=" +
-      paginationFilterModel.pageNumber +
-      "&PageSize=" +
-      paginationFilterModel.pageSize;
-    if (paginationFilterModel.querySearch) {
-      url += "&QuerySearch=" + paginationFilterModel.querySearch;
-    }
-    //const resp =
-    http
-      .get<IMovie[]>(url)
-      .then((data) => {
-        //console.log(data.data);
-        setMovies(data.data);
-      })
-      .catch((err) => {
-        alert(err);
-      })
-      .then(() => {
-        //console.log(movies);
-      });
+  //   let url: string =
+  //     "Movie/getMovies?PageNumber=" +
+  //     paginationFilterModel.pageNumber +
+  //     "&PageSize=" +
+  //     paginationFilterModel.pageSize;
+  //   if (paginationFilterModel.querySearch) {
+  //     url += "&QuerySearch=" + paginationFilterModel.querySearch;
+  //   }
+  //   //const resp =
+  //   http
+  //     .get<IMovie[]>(url)
+  //     .then((data) => {
+  //       //console.log(data.data);
+  //       setMovies(data.data);
+  //     })
+  //     .catch((err) => {
+  //       alert(err);
+  //     })
+  //     .then(() => {
+  //       //console.log(movies);
+  //     });
+  getMoviesToState();
   }, []);
   // let products : IMovie[] = [
   //     {
@@ -98,6 +106,7 @@ const MoviesPage = () => {
       <button
         onClick={() => {
           console.log(movies);
+          console.log(headerss);
         }}
       >
         {" "}
@@ -109,6 +118,7 @@ const MoviesPage = () => {
         columns={columns}
         pagination={paginationFactory({ sizePerPage: 5 })}
       /> */}
+
       <table className="table">
         <thead>
           <tr>
@@ -132,6 +142,13 @@ const MoviesPage = () => {
           ))}
         </tbody>
       </table>
+      <div className="container">
+        <Pagination
+          currentPage={currentPage}
+          onChangePage={(number: number) => setCurrentPage(number)}
+          pageAmount={movies?.length}
+        />
+      </div>
     </>
   );
 };
