@@ -12,5 +12,7 @@ namespace Core.DTOs
         public string Name { get; set; }
         public string Url { get; set; }
         public string Notes { get; set; }
+        public DateTime ParseTime { get; set; }
+        public IEnumerable<PlatformMovieDTO> PlatformsMovies { get; set; }
     }
 }

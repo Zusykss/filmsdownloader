@@ -13,3 +13,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* .table-platforms{
+  display: flex;
+} */
+.table-platforms > img{
+  width: 50px;
+}

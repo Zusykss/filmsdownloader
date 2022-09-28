@@ -1,4 +1,4 @@
-.pagination li {
+/* .pagination li {
     display: inline-block;
 }
 
@@ -13,9 +13,32 @@
     cursor: pointer;
     display: inline-block;
     color: white;
-}
+} */
 
 /* &:hover {
           background-color: #1ec6fe;
           color: $white;
         } */
+.pagination{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem;
+    font-size: 1.2rem;
+    gap: 5px;
+}
+.pagination a{
+    text-decoration: none;
+}
+.pagination .page-num{
+    border: 1px solid darkgray;
+    color: rgb(0, 0, 0);
+    background-color: rgb(201, 201, 201);
+    padding: 8px 10px;
+    /* border-radius: 100%; */
+}
+.pagination .active{
+    background-color: rgb(255, 148, 148);
+    
+} 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import classNames from 'classnames';
 import { Form, FormikProvider, useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +6,6 @@ import Swal from 'sweetalert2';
 import IParserStartParams, { IPlatform } from './types';
 import './index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'; 
 import PlatformItem from '../platformItem';
 export default function HomePage(props: any) {

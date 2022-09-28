@@ -29,12 +29,12 @@ namespace MoviesParserAPI.Controllers
             //    movies.HasPrevious
             //};
             //HttpContext.Current.Response.Headers.Add("Paging-Headers", JsonConvert.SerializeObject(paginationMetadata));
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(movies.Metadata));
-            return Ok(movies.Items);
+            //Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(movies.Metadata));
+            return Ok(movies); //.Items
         }
 
         [HttpPost("editMovie")]
-        public async Task<IActionResult> UpdateMovie(MovieDTO movieDTO)
+        public async Task<IActionResult> UpdateMovie([FromBody]MovieDTO movieDTO)
         {
             await _movieService.Edit(movieDTO);
             return Ok();
