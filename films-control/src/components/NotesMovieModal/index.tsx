@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { INotesProps } from './types';
@@ -10,14 +10,17 @@ const NotesMovieModal : React.FC<INotesProps> = ({movie}) => {
     const handleShow = () => setShow(true);
     const handleSave = () => {
       movie.notes = notes;
-      http.post('Movie/editMovie', {movie})
+      http.post('Movie/updateNotes?id='+movie.id, `\"${movie.notes}\"`);
       console.log(movie);
       handleClose();
     }
-    const [notes, setNotes] = useState<string>();
+    // useEffect(() => {
+    //   setNotes(movie.notes);
+    // }, []);
+    const [notes, setNotes] = useState<string>(movie.notes ? movie.notes : '');
     return(
         <>
-        <h6 onClick={() => handleShow()}>{movie.notes ? movie.notes : 'Haven`t'}</h6>
+        <h6 onClick={() => handleShow()}>{movie.notes ? movie.notes.substring(0, 12) + '...' : 'Haven`t'}</h6>
         <Modal
         show={show}
         onHide={handleClose}
@@ -30,7 +33,7 @@ const NotesMovieModal : React.FC<INotesProps> = ({movie}) => {
 
       <Modal.Body>
         <p>Edit notes here.</p>
-        <textarea name="notes" id="notes" className='form-control' onChange={(ev) => setNotes(ev.target.value)}/>
+        <textarea name="notes" id="notes" className='form-control' onChange={(ev) => setNotes(ev.target.value)} value={notes}/>
       </Modal.Body>
 
       <Modal.Footer>

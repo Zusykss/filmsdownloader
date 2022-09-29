@@ -7,7 +7,8 @@ export interface IMovie{
     url: string,
     notes?: string,
     parseTime: Date,
-    platformsMovies: IPlatformMovie[]
+    platformsMovies: IPlatformMovie[],
+    status: IStatus
 }
 export interface IPaginationFilterModel {
     pageNumber : number,
@@ -21,5 +22,9 @@ export interface IGetMovieResponse {
 export interface IPlatformMovie{
     url: string,
     platform: IPlatform
+}
+export interface IStatus{
+    id: number,
+    name: string
 }
 export default IMovie;

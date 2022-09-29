@@ -19,3 +19,9 @@ code {
 .table-platforms > img{
   width: 50px;
 }
+.table-select{
+  font-size: 10px !important;
+}
+.modal-platform-img{
+  width: 4rem;
+}

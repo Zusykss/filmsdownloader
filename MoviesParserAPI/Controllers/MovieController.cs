@@ -1,5 +1,6 @@
 ﻿using Core.Classes;
 using Core.DTOs;
+using Core.DTOs.Edit;
 using Core.Entities;
 using Core.Interfaces.CustomServices;
 using Core.Services;
@@ -15,10 +16,23 @@ namespace MoviesParserAPI.Controllers
     {
         private readonly IMovieService _movieService;
 
-        [HttpGet("getMovies")]
-        public async Task<IActionResult> GetMovies([FromQuery] QueryStringParameters queryStringParameters)
+        [HttpPost("updateStatus")]
+        public async Task<IActionResult> UpdateStatus([FromQuery] int id, [FromQuery] int statusId)
         {
-            var movies = await _movieService.GetByPage(queryStringParameters);
+            await _movieService.UpdateStatus(id, statusId);
+            return Ok(); 
+        }
+        [HttpPost("updateNotes")]
+        public async Task<IActionResult> UpdateNotes([FromQuery] int id, [FromBody] string notes)
+        {
+            await _movieService.UpdateNotes(id, notes);
+            return Ok();
+        }
+
+        [HttpGet("getMovies")]
+        public async Task<IActionResult> GetMovies([FromQuery] QueryStringParameters queryStringParameters,[FromQuery] IEnumerable<int> platforms )
+        {
+            var movies = await _movieService.GetByPage(queryStringParameters, platforms);
             //var metadata = new
             //{
             //    movies.TotalCount,
@@ -34,7 +48,7 @@ namespace MoviesParserAPI.Controllers
         }
 
         [HttpPost("editMovie")]
-        public async Task<IActionResult> UpdateMovie([FromBody]MovieDTO movieDTO)
+        public async Task<IActionResult> UpdateMovie([FromBody]EditMovieDTO movieDTO)
         {
             await _movieService.Edit(movieDTO);
             return Ok();

@@ -17,7 +17,7 @@ namespace Infrastructure.Helpers
         }
         public static void AddUnitOfWork(this IServiceCollection services)
         {
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.DTOs;
+using Core.DTOs.Edit;
 using Core.DTOs.Response;
 using Core.Entities;
 using Core.Interfaces;
@@ -22,6 +23,7 @@ namespace Core.Helpers
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ISerialService, SerialService>();
             services.AddScoped<IParserService, ParserService>();
+            services.AddScoped<IStatusService, StatusService>();
             //services.AddScoped<IAuthorService, AuthorService>();
             //services.AddScoped<ITableService, TableService>();
             //services.AddScoped<IAccountService, AccountService>();
@@ -33,11 +35,13 @@ namespace Core.Helpers
             {
                 mc.CreateMap<Platform, PlatformDTO>().ReverseMap();
                 mc.CreateMap<Movie, MovieDTO>().ReverseMap();
+                mc.CreateMap<Movie, EditMovieDTO>().ReverseMap();
                 mc.CreateMap<Serial, SerialDTO>().ReverseMap();
                 mc.CreateMap<Movie, MovieResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.PlatformsMovies.Select(p => p.Movie.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
                 mc.CreateMap<Serial, SerialResponseDTO>().ForMember(dest => dest.Platforms, act => act.MapFrom(src => src.PlatformsSerials.Select(p => p.Serial.Name))).ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status.Name)).ReverseMap();
                 mc.CreateMap<PlatformMovie, PlatformMovieDTO>().ReverseMap();
                 mc.CreateMap<PlatformSerial, PlatformSerialDTO>().ReverseMap();
+                mc.CreateMap<Status, StatusDTO>().ReverseMap();
                 //mc.CreateMap<Table, TableDTO>().ReverseMap();
             });
 

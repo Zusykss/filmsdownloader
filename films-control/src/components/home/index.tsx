@@ -8,19 +8,62 @@ import './index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'; 
 import PlatformItem from '../platformItem';
+import { Spinner } from 'react-bootstrap';
 export default function HomePage(props: any) {
     const initialValues: IParserStartParams = {
         //count: 100,
         category: 1,
         platforms: []
     };
+    const navigate = useNavigate();
     const [parserState, setParserState]= useState<string>("Unkown");
 
     const [platforms, setPlatforms] = useState<IPlatform[]>([]);
-
+    const [loading, setLoading] = useState<boolean>(true);
     //const infinityRef = useRef<any>(null);
     const [isInfinity, setIsInfinity] = useState(true);
+
+    const onHandleSubmit = async (values: IParserStartParams) => {
+      try{
+        values.platforms = platforms.filter(pl => pl.isSelected).map(pl => pl.id);
+        const model = {...values};
+        //console.log("");
+        console.log(values);
+        axios
+        .post("https://localhost:7012/api/Parser/startParser", model)
+        .then((data) => {
+          console.log("data", data);
+          Swal.fire({
+            icon: "success",
+            title: "Nice!",
+            text: "Parser started!",
+          });
+          updateParserState();
+          navigate('/');
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+          console.log(err);
+        });
+      }
+      catch(error){
+        console.error("problem submit", error);
+      }
+      console.log(values);
+  };
+
+    const formik = useFormik({
+      initialValues: initialValues,
+      // validationSchema: RegisterSchema,
+      onSubmit: onHandleSubmit,
+    });
+    const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
     useEffect(() => {
+        setLoading(true);
         //console.log(process.env.REACT_APP_SERVER_URL+'1');
         // if(infinityRef.current != null){
         //   infinityRef.current.focus();
@@ -34,10 +77,16 @@ export default function HomePage(props: any) {
             //data.data = 
             data.data.shift();
             setPlatforms(data.data);
-        });
+        }).catch(ex => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+          });
+        }).finally(() => setLoading(false));
     },[]);
+    //if (loading) return <Spinner animation="border"/>;
     
-    const navigate = useNavigate();
     const updateParserState = () => {
       axios
         .get("https://localhost:7012/api/Parser/getParserState")
@@ -57,44 +106,8 @@ export default function HomePage(props: any) {
     // useEffect(() => {
     //   console.log("changes " + platforms[1]?.isSelected);
     // }, [platforms])
-    const onHandleSubmit = async (values: IParserStartParams) => {
-        try{
-          values.platforms = platforms.filter(pl => pl.isSelected).map(pl => pl.id);
-          const model = {...values};
-          //console.log("");
-          console.log(values);
-          axios
-          .post("https://localhost:7012/api/Parser/startParser", model)
-          .then((data) => {
-            console.log("data", data);
-            Swal.fire({
-              icon: "success",
-              title: "Nice!",
-              text: "Parser started!",
-            });
-            updateParserState();
-            navigate('/');
-          })
-          .catch((err) => {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Something went wrong!",
-            });
-            console.log(err);
-          });
-        }
-        catch(error){
-          console.error("problem submit", error);
-        }
-        console.log(values);
-    };
-    const formik = useFormik({
-        initialValues: initialValues,
-        // validationSchema: RegisterSchema,
-        onSubmit: onHandleSubmit,
-      });
-      const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
+    
+    
       // useEffect(()=> {
       //   infinityRef.current.checked = formik.values.count == null;
       // },[formik.values.count]);
@@ -105,17 +118,20 @@ export default function HomePage(props: any) {
         const elementIndex : number | undefined = newPlatforms.findIndex(el2 => el2.id === el.id);
         if(elementIndex !== undefined){
           //console.log("must be "+!newPlatforms[elementIndex].isSelected+ " have "+newPlatforms[elementIndex].isSelected);
-          console.log("was : " + newPlatforms[elementIndex].isSelected + " at index : " + elementIndex);
+          //console.log("was : " + newPlatforms[elementIndex].isSelected + " at index : " + elementIndex);
           newPlatforms[elementIndex].isSelected = !newPlatforms[elementIndex].isSelected;
-          console.log("became : " + newPlatforms[elementIndex].isSelected );
+          //console.log("became : " + newPlatforms[elementIndex].isSelected );
           //console.log("NEW", newPlatforms);
           setPlatforms(newPlatforms);
           //console.log("became2 : " + platforms[elementIndex].isSelected );
         }
       }
+     
   return (
+
     <div className="row p-5">
-      <div className="offset-md-3 col-md-6">
+      { loading ? <Spinner animation="border" className="p-5 text-center"></Spinner> : (
+        <div className="offset-md-3 col-md-6">
         <button className='btn btn-primary mb-2' onClick={() => updateParserState()}> Refresh   <FontAwesomeIcon icon={faArrowRotateForward} /> </button>
         <h3> State: {parserState} </h3>
         {
@@ -323,6 +339,7 @@ export default function HomePage(props: any) {
           </Form>
         </FormikProvider>
       </div>
+      )}
     </div>
   );
 }

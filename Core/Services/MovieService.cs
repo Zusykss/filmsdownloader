@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core.Classes;
 using Core.DTOs;
+using Core.DTOs.Edit;
 using Core.DTOs.General;
 using Core.DTOs.Response;
 using Core.Entities;
@@ -30,13 +31,30 @@ namespace Core.Services
             await _unitOfWork.MovieRepository.SaveChangesAsync();
         }
 
-        public async Task<MoviesResponseDTO> GetByPage(QueryStringParameters queryStringParameters)
+        public async Task<MoviesResponseDTO> GetByPage(QueryStringParameters queryStringParameters,
+            IEnumerable<int> platforms)
         {
             //return
-            var collection = _mapper.Map<IEnumerable<MovieDTO>>(await _unitOfWork.MovieRepository.Get());////GetByPage(queryStringParameters)).ToList();
+            var collection = _mapper.Map<IEnumerable<MovieDTO>>((await _unitOfWork.MovieRepository.Get()).OrderByDescending(m => m.ParseTime));////GetByPage(queryStringParameters)).ToList();
             if (!string.IsNullOrEmpty(queryStringParameters.QuerySearch))
             {
                 collection = collection.Where(m => m.Name.Contains(queryStringParameters.QuerySearch) || m.Url.Contains(queryStringParameters.QuerySearch));
+            }
+
+            var platformsList = platforms.ToList();//platforms.ToArray();
+            if (platformsList.Any())
+            {
+                collection = collection.Where((m) => m.PlatformsMovies.Any() && m.PlatformsMovies.All((pm) =>
+                {
+                    if (platformsList.Contains(pm.Platform.Id))
+                    {
+                        platformsList.Remove(pm.Platform.Id);
+                        return true;
+                    }
+                    //else if(!platformsList.Any()) return true;
+                    return false;
+                     ;
+                }));
             }
             // Get's No of Rows Count   
             int count = collection.Count();
@@ -87,7 +105,17 @@ namespace Core.Services
             return movie == null ? null : _mapper.Map<MovieDTO>(movie);
         }
 
-        public async Task Edit(MovieDTO movieDTO)
+        public async Task UpdateStatus(int id, int statusId)
+        {
+            var movie = await _unitOfWork.MovieRepository.GetById(id);
+            if (movie == null) throw new HttpException("Movie doesn`t exists", HttpStatusCode.BadRequest);
+            var status = await _unitOfWork.StatusRepository.GetById(statusId);
+            if (status == null) throw new HttpException("Status doesn`t exists", HttpStatusCode.BadRequest);
+            movie.Status = status;
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task Edit(EditMovieDTO movieDTO)
         {
             if (movieDTO == null || !movieDTO.Id.HasValue)
             {
@@ -100,7 +128,8 @@ namespace Core.Services
             //    if (!movieId.HasValue) throw new HttpException("Incorrect url (doesn`t exist)", HttpStatusCode.BadRequest);
             //    movieDTO.Id = movieId.Value;
             //}
-            _unitOfWork.MovieRepository.Update(_mapper.Map<Movie>(movieDTO)); //D
+            var movie = _mapper.Map<Movie>(movieDTO);
+            _unitOfWork.MovieRepository.Update(movie); //D
             await _unitOfWork.MovieRepository.SaveChangesAsync();
         }
 
@@ -127,6 +156,14 @@ namespace Core.Services
             //movie.PlatformsMovies =
             // 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task UpdateNotes(int id, string notes)
+        {
+            var movie = await _unitOfWork.MovieRepository.GetById(id);
+            if (movie == null) throw new HttpException("Movie doesn`t exists", HttpStatusCode.BadRequest);
+            movie.Notes = notes;
+            await _unitOfWork.MovieRepository.SaveChangesAsync();
         }
 
 
