@@ -56,6 +56,11 @@ const MoviesPage = () => {
         setIsLoading(false);
       });
   };
+  const movieProperties : string[] = [
+    "Id",
+    "Url",
+    "ParseTime"
+  ]
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1); // first page
   const [countPages, setCountPages] = useState<number>(0);
@@ -111,6 +116,12 @@ const MoviesPage = () => {
             setQuerySearch(ev.target.value)
           }
         />
+        <div>
+        <label htmlFor="sortSelect">Select Sort</label> 
+        <select name="sortSelect" id="" className="form-control form-select">
+          <option value="Id">Id</option>
+        </select>
+      </div> s
       </div>
       <button
         className="btn btn-primary mx-2 px-3"
@@ -130,6 +141,7 @@ const MoviesPage = () => {
         <FontAwesomeIcon icon={faCircleXmark} />
       </button>
     </div>
+      
         <PlatformSelector setPlatformsFromModal={setPlatformsFromModal} applyPlatforms={applyPlatforms}></PlatformSelector>
      { isLoading ? <Spinner animation="border" className="p-5 text-center"></Spinner> : (
       <>
