@@ -66,7 +66,8 @@ const PlatformSelector : React.FC<IPlatformSelectorProps> = (props : IPlatformSe
                 <>
                 <img 
                 key = {el.id}
-                src={el.id !== 1 ? el?.imageUrl : 'https://cdn.pixabay.com/photo/2012/04/24/12/29/no-symbol-39767_1280.png'} 
+                src={el?.imageUrl} 
+                // el.id !== 1 ? el?.imageUrl : ''
                 alt={el?.name} 
                 className={classNames(
                     "modal-platform-img",

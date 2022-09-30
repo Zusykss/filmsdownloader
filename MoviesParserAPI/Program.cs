@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomServices();
 builder.Services.Configure<ParserSettings>(builder.Configuration.GetSection(nameof(ParserSettings)));
+builder.Services.Configure<AppConstants>(builder.Configuration.GetSection(nameof(AppConstants)));
 builder.Services.AddUnitOfWork();
 
 builder.Services.AddRepository();

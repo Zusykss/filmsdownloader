@@ -44,18 +44,19 @@ namespace Core.Services
             var platformsList = platforms.ToList();//platforms.ToArray();
             if (platformsList.Any())
             {
-                collection = collection.Where((m) => m.PlatformsMovies.Any() && m.PlatformsMovies.All((pm) =>
-                {
-                    if (platformsList.Contains(pm.Platform.Id))
-                    {
-                        platformsList.Remove(pm.Platform.Id);
-                        return true;
-                    }
-                    //else if(!platformsList.Any()) return true;
-                    return false;
-                     ;
-                }));
-            }
+                collection = collection.Where((m) => m.PlatformsMovies.Any() && m.PlatformsMovies.Any((pm) => platforms.Contains( pm.Platform.Id)
+               ));
+                // {
+            //    if (platformsList.Contains(pm.Platform.Id))
+            //    {
+            //        platformsList.Remove(pm.Platform.Id);
+            //        return true;
+            //    }
+            //    //else if(!platformsList.Any()) return true;
+            //    return false;
+            //    ;
+            //}
+        }
             // Get's No of Rows Count   
             int count = collection.Count();
 
