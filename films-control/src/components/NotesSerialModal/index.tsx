@@ -3,24 +3,19 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { INotesProps } from './types';
 import http from '../../http_common';
-const NotesMovieModal : React.FC<INotesProps> = ({movie}) => {
+const NotesSerialModal : React.FC<INotesProps> = ({serial}) => {
     const [show, setShow] = useState<boolean>(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleSave = () => {
-      movie.notes = notes;
-      http.post('Movie/updateNotes?id='+movie.id, `\"${movie.notes}\"`);
-      //console.log(movie);
+        serial.notes = notes;
+      http.post('Serial/updateNotes?id='+serial.id, `\"${serial.notes}\"`);
       handleClose();
     }
-    // useEffect(() => {
-    //   setNotes(movie.notes);
-    // }, []);
-    const [notes, setNotes] = useState<string>(movie.notes ? movie.notes : '');
+    const [notes, setNotes] = useState<string>(serial.notes ? serial.notes : '');
     return(
         <>
-        <h6 onClick={() => handleShow()}>{movie.notes ? movie.notes.substring(0, 12) + '...' : 'Haven`t'}</h6>
+        <h6 onClick={() => handleShow()}>{serial.notes ? serial.notes.substring(0, 12) + '...' : 'Haven`t'}</h6>
         <Modal
         show={show}
         onHide={handleClose}
@@ -45,4 +40,4 @@ const NotesMovieModal : React.FC<INotesProps> = ({movie}) => {
         </>
     )
 }
-export default NotesMovieModal;
+export default NotesSerialModal;

@@ -20,7 +20,7 @@ const Pagination: React.FC<PaginationProps> = ({
       nextLabel='>'
       previousLabel='<'
       onPageChange={(event) => onChangePage(event.selected + 1)}
-      pageRangeDisplayed={pageAmount}
+      pageRangeDisplayed={8}
       pageLinkClassName="page-num"
       pageCount={pageAmount}
       forcePage={currentPage - 1}

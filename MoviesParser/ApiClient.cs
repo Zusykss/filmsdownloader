@@ -17,6 +17,8 @@ namespace MoviesParser
         private static readonly string _apiPath = File.ReadAllLines("settings.txt")[6];//;//""
         public static async Task CreatePlatformIfIsNotExist(string platformName, string imageUrl)
         {
+            //client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
             HttpResponseMessage response = await client.PostAsJsonAsync(_apiPath+ "Platform/addIfNotExists", new {Name = platformName, ImageUrl = imageUrl});
         }
 

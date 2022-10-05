@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DTOs
+namespace Core.DTOs.Edit
 {
-    public class SerialDTO
+    public class EditSerialDTO
     {
         public int? Id { get; set; }
         public string Name { get; set; }
@@ -16,10 +16,5 @@ namespace Core.DTOs
         public string Notes { get; set; }
 
         public bool IsUpdated { get; set; }
-
-        public DateTime ParseTime { get; set; }
-        public StatusDTO Status { get; set; }
-        public IEnumerable<PlatformSerialDTO> PlatformsSerials { get; set; }
-        //public int StatusId { get; set; }
     }
 }

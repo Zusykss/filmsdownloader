@@ -12,7 +12,7 @@ namespace Infrastructure.Data
 {
     public class ApplicationContext : DbContext
     {
-        IOptions<AppConstants> _appConstants;
+        readonly IOptions<AppConstants> _appConstants;
         public ApplicationContext(DbContextOptions<ApplicationContext> options, IOptions<AppConstants> appConstants) : base(options)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

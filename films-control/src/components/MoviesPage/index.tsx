@@ -14,6 +14,8 @@ import { IPaginationMetadata } from "../pagination/types";
 import NotesMovieModal from "../NotesMovieModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import MovieSelect from "../MovieSelect";
 import { Spinner } from "react-bootstrap";
 import PlatformSelector from "../PlatformSelector";
@@ -24,12 +26,13 @@ const MoviesPage = () => {
     pageSize: 20,
   };
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAscending, setIsAscending] = useState<boolean>(true);
+  const [sortProperty, setSortProperty] = useState<string>('Id');
   const getMoviesToState = () => {
-
+    setIsLoading(true);
     http.get<IStatus[]>("Status/getStatuses").then((data)=> {
       setStatuses(data.data);
     });
-    setIsLoading(true);
     let url: string =
       "Movie/getMovies?PageNumber=" +
       currentPage +
@@ -37,6 +40,10 @@ const MoviesPage = () => {
       paginationFilterModel.pageSize;
     if (querySearch && querySearch !== "") {
       url += "&QuerySearch=" + querySearch;
+    }
+    url+="&OrderProperty=" + sortProperty;
+    if(!isAscending){
+      url+="&OrderBy=desc";
     }
     if(platforms && platforms.length > 0){
       url += `\&${platforms.map((p : number, index : number) => `platforms=${p}`).join('&')}`;
@@ -47,7 +54,7 @@ const MoviesPage = () => {
       .then((data) => {
         console.log(data);
         setMovies(data.data.items);
-        setCurrentPage(data.data.metadata.currentPage);
+        //setCurrentPage(data.data.metadata.currentPage);
         setCountPages(data.data.metadata.totalPages);
       })
       .catch((err) => {
@@ -56,11 +63,6 @@ const MoviesPage = () => {
         setIsLoading(false);
       });
   };
-  const movieProperties : string[] = [
-    "Id",
-    "Url",
-    "ParseTime"
-  ]
   const [movies, setMovies] = useState<IMovie[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1); // first page
   const [countPages, setCountPages] = useState<number>(0);
@@ -71,7 +73,8 @@ const MoviesPage = () => {
   //const [showNotes, setShowNotes] = useState<boolean>(false);
   useEffect(() => {
     try{
-      setIsLoading(true);
+      console.log('loading');
+      //setIsLoading(true);
       getMoviesToState();
     }
     catch(ex){
@@ -82,13 +85,15 @@ const MoviesPage = () => {
     }
   }, []);
   useEffect(() => {
+    console.log('page');
     getMoviesToState();
   }, [currentPage]);
-  useEffect(() => {
-    if (querySearch === "" || !querySearch) {
-      getMoviesToState();
-    }
-  }, [querySearch]);
+  // useEffect(() => {
+  //   console.log('querySearch');
+  //   if (querySearch === "" || !querySearch) {
+  //     getMoviesToState();
+  //   }
+  // }, [querySearch, setQuerySearch]);
   const setPlatformsFromModal = (platforms : number[]) => {
     console.log(platforms + ' : platforms');
     setPlatforms(platforms);
@@ -96,6 +101,11 @@ const MoviesPage = () => {
   const applyPlatforms = () =>{
     console.log('p: ' + platforms);
     getMoviesToState();
+  }
+  const applySearch = () =>{
+    //if (querySearch === "" || !querySearch) {
+      getMoviesToState();
+    //}
   }
   //..сщт
   // useEffect(() => {
@@ -116,13 +126,9 @@ const MoviesPage = () => {
             setQuerySearch(ev.target.value)
           }
         />
-        <div>
-        <label htmlFor="sortSelect">Select Sort</label> 
-        <select name="sortSelect" id="" className="form-control form-select">
-          <option value="Id">Id</option>
-        </select>
-      </div> s
+        
       </div>
+      
       <button
         className="btn btn-primary mx-2 px-3"
         onClick={() => {
@@ -135,13 +141,37 @@ const MoviesPage = () => {
         className="btn btn-danger"
         onClick={() => {
           setQuerySearch("");
+          applySearch();
         }}
         >
         {" "}
         <FontAwesomeIcon icon={faCircleXmark} />
       </button>
     </div>
-      
+      <div className="p-3 d-flex mb-3 align-items-end gap-2">
+        <div>
+
+        <label htmlFor="sortSelect">Select Sort</label> 
+        <select name="sortSelect" id="" className="form-control form-select" value={sortProperty} onChange={(ev) => setSortProperty(ev.target.value)}>
+          <option value="Id">Id</option>
+          <option value="Name">Name</option>
+          <option value="ParseTime">ParseTime</option>
+        </select>
+        </div>
+        <button className="btn btn-primary" onClick={() => getMoviesToState()}>
+          Sort
+        </button>
+        <button className="btn btn-secondary" onClick={() => setIsAscending(!isAscending)}>
+          {
+            isAscending ? (
+              <FontAwesomeIcon icon={faSortUp}/>
+              ) : (
+                <FontAwesomeIcon icon={faSortDown}/>
+              )
+          }
+        </button>
+      </div>
+    
         <PlatformSelector setPlatformsFromModal={setPlatformsFromModal} applyPlatforms={applyPlatforms}></PlatformSelector>
      { isLoading ? <Spinner animation="border" className="p-5 text-center"></Spinner> : (
       <>
@@ -192,6 +222,7 @@ const MoviesPage = () => {
                   <td>
                     {Moment(movie.parseTime).format("MM/DD/YYYY HH:mm	")}
                   </td>
+                  
                 </tr>
               </>
             ))}

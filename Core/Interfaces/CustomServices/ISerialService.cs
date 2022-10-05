@@ -5,15 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Classes;
 using Core.DTOs;
+using Core.DTOs.Edit;
+using Core.DTOs.Response;
 
 namespace Core.Interfaces.CustomServices
 {
     public interface ISerialService
     {
         Task Add(SerialDTO movieDTO);
-        PagedList<SerialDTO> GetByPage(QueryStringParameters queryStringParameters);
+        Task<SerialsResponseDTO> GetByPage(QueryStringParameters queryStringParameters, IEnumerable<int> platforms);
         Task<SerialDTO> GetByUrl(string url);
-        Task Edit(SerialDTO serialDTO);
+        Task Edit(EditSerialDTO serialDTO);
         Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id);
+        Task UpdateNotes(int id, string notes);
+        Task UpdateIsUpdated(int id, bool isUpdated);
+        Task UpdateStatus(int id, int statusId);
     }
 }

@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Core.Helpers;
 using Core.Helpers.Options;
 using Infrastructure.Data;
@@ -18,9 +21,13 @@ builder.Services.Configure<AppConstants>(builder.Configuration.GetSection(nameof
 builder.Services.AddUnitOfWork();
 
 builder.Services.AddRepository();
-
+ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+//ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+//{
+//    return true;
+//};
 builder.Services.AddAutoMapper();
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -33,17 +33,6 @@ namespace MoviesParserAPI.Controllers
         public async Task<IActionResult> GetMovies([FromQuery] QueryStringParameters queryStringParameters,[FromQuery] IEnumerable<int> platforms )
         {
             var movies = await _movieService.GetByPage(queryStringParameters, platforms);
-            //var metadata = new
-            //{
-            //    movies.TotalCount,
-            //    movies.PageSize,
-            //    movies.CurrentPage,
-            //    movies.TotalPages,
-            //    movies.HasNext,
-            //    movies.HasPrevious
-            //};
-            //HttpContext.Current.Response.Headers.Add("Paging-Headers", JsonConvert.SerializeObject(paginationMetadata));
-            //Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(movies.Metadata));
             return Ok(movies); //.Items
         }
 

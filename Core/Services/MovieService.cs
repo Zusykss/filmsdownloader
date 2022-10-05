@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,6 +14,7 @@ using Core.DTOs.General;
 using Core.DTOs.Response;
 using Core.Entities;
 using Core.Exceptions;
+using Core.Helpers.Extensions;
 using Core.Helpers.Options;
 using Core.Interfaces;
 using Core.Interfaces.CustomServices;
@@ -35,7 +37,8 @@ namespace Core.Services
             IEnumerable<int> platforms)
         {
             //return
-            var collection = _mapper.Map<IEnumerable<MovieDTO>>((await _unitOfWork.MovieRepository.Get()).OrderByDescending(m => m.ParseTime));////GetByPage(queryStringParameters)).ToList();
+            //(await _unitOfWork.MovieRepository.Get()).Include
+            var collection = _mapper.Map<IEnumerable<MovieDTO>>((await _unitOfWork.MovieRepository.Get(includeProperties: "Status,PlatformsMovies"))).AsQueryable();////GetByPage(queryStringParameters)).ToList(); //.OrderByDescending(m => m.ParseTime)
             if (!string.IsNullOrEmpty(queryStringParameters.QuerySearch))
             {
                 collection = collection.Where(m => m.Name.Contains(queryStringParameters.QuerySearch) || m.Url.Contains(queryStringParameters.QuerySearch));
@@ -44,19 +47,47 @@ namespace Core.Services
             var platformsList = platforms.ToList();//platforms.ToArray();
             if (platformsList.Any())
             {
-                collection = collection.Where((m) => m.PlatformsMovies.Any() && m.PlatformsMovies.Any((pm) => platforms.Contains( pm.Platform.Id)
+                collection = collection.Where((m) => m.PlatformsMovies.Any() && m.PlatformsMovies.Any((pm) => platforms.Contains(pm.Platform.Id)
                ));
+
                 // {
-            //    if (platformsList.Contains(pm.Platform.Id))
+                //    if (platformsList.Contains(pm.Platform.Id))
+                //    {
+                //        platformsList.Remove(pm.Platform.Id);
+                //        return true;
+                //    }
+                //    //else if(!platformsList.Any()) return true;
+                //    return false;
+                //    ;
+                //}
+            }
+
+            if (!String.IsNullOrWhiteSpace(queryStringParameters.OrderProperty))
+            {
+                bool ascending = !(!String.IsNullOrWhiteSpace(queryStringParameters.OrderBy) && queryStringParameters.OrderBy == "desc");
+                collection = collection.OrderByPropertyName(queryStringParameters.OrderProperty, ascending);
+            }
+            //    var orderParams = queryStringParameters.OrderBy.Trim().Split(',');
+            //    var propertyInfos = typeof(MovieDTO).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            //    var orderQueryBuilder = new StringBuilder();
+            //    foreach (var param in orderParams)
             //    {
-            //        platformsList.Remove(pm.Platform.Id);
-            //        return true;
+            //        if (string.IsNullOrWhiteSpace(param))
+            //            continue;
+            //        var propertyFromQueryName = param.Split(" ")[0];
+            //        var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+            //        if (objectProperty == null)
+            //            continue;
+            //        var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+            //        orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {sortingOrder}, ");
             //    }
-            //    //else if(!platformsList.Any()) return true;
-            //    return false;
-            //    ;
+            //    var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
+            //    IQueryable<MovieDTO> query = collection.Where(el => el.Name == "dd");
+            //    collection = query.Sort(orderQuery);
+            //else
+            //{
+            //    collection = collection.OrderBy(x => x.Name);
             //}
-        }
             // Get's No of Rows Count   
             int count = collection.Count();
 

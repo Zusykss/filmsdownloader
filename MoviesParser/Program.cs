@@ -1,4 +1,6 @@
 ﻿#region Usings
+
+using System.Net;
 using MoviesParser;
 using MoviesParser.Helpers;
 
@@ -7,6 +9,7 @@ using MoviesParser.Helpers;
 
 
 //var category = File.ReadAllLines("settings.txt")[5];
+ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 Console.WriteLine("  __  __            _        _____                         \r\n |  \\/  |          (_)      |  __ \\                        \r\n | \\  / | _____   ___  ___  | |__) |_ _ _ __ ___  ___ _ __ \r\n | |\\/| |/ _ \\ \\ / / |/ _ \\ |  ___/ _` | '__/ __|/ _ \\ '__|\r\n | |  | | (_) \\ V /| |  __/ | |  | (_| | |  \\__ \\  __/ |   \r\n |_|  |_|\\___/ \\_/ |_|\\___| |_|   \\__,_|_|  |___/\\___|_|   \r\n                                                           ");
 Console.WriteLine("Started");
 //Console.WriteLine(String.Join(' ',args));

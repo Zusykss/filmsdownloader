@@ -11,6 +11,7 @@ namespace Core.Classes
         const int maxPageSize = 50;
         public int PageNumber { get; set; } = 1;
         private int _pageSize = 10;
+
         public int PageSize
         {
             get
@@ -24,5 +25,7 @@ namespace Core.Classes
         }
 
         public string QuerySearch { get; set; }
+        public string OrderBy { get; set; }
+        public string OrderProperty { get; set; }
     }
 }

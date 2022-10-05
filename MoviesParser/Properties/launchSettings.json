@@ -2,7 +2,7 @@
   "profiles": {
     "MoviesParser": {
       "commandName": "Project",
-      "commandLineArgs": "-category=1 -platforms=\"3,4,5\" -count=100 "
+      "commandLineArgs": "-category=0 -platforms=\"3,4,5\" -count=100 "
     }
   }
 }

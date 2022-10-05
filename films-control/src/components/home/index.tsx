@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'; 
 import PlatformItem from '../platformItem';
 import { Spinner } from 'react-bootstrap';
+import http_common from '../../http_common';
 export default function HomePage(props: any) {
     const initialValues: IParserStartParams = {
         //count: 100,
@@ -72,7 +73,7 @@ export default function HomePage(props: any) {
         //infinityRef.current!.focus();
         console.log('updated!');
         updateParserState();
-        axios.get<IPlatform[]>("https://localhost:7012/api/Platform/getAllPlatforms").then((data)=>{
+        http_common.get<IPlatform[]>("Platform/getAllPlatforms").then((data)=>{
             //console.log(data);
             //data.data = 
             data.data.shift();
@@ -195,132 +196,18 @@ export default function HomePage(props: any) {
                 type="number"
                 value={formik.values.count}
                 min='1'
-                //onKeyPress={(event) => event!.charCode >= 48 && event!.charCode <= 57}
-                //handleChange
                 onChange={(ev) => {if(!isInfinity) {setFieldValue('count', ev.target.value.replace(/[^0-9]/g, ""))}}}
                 name="count"
                 id="count"
                 pattern="[1-9][0-9]*"
               >
-                
               </input>
-              {/* {touched.email && errors.email && (
-                <div className="invalid-feedback">{errors.email}</div>
-              )} */}
             </div>
               ):
               (
                 <h3>Infinity count of parsing</h3>
               )
             }
-            
-            {/* 
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password*
-              </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                onChange={handleChange}
-                className={classNames(
-                  "form-control",
-                  { "is-invalid": touched.password && errors.password },
-                  { "is-valid": touched.password && !errors.password }
-                )}
-              />
-              {touched.password && errors.password && (
-                <div className="invalid-feedback">{errors.password}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password*
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                onChange={handleChange}
-                className={classNames(
-                  "form-control",
-                  {
-                    "is-invalid":
-                      touched.confirmPassword && errors.confirmPassword,
-                  },
-                  {
-                    "is-valid":
-                      touched.confirmPassword && !errors.confirmPassword,
-                  }
-                )}
-              />
-              {touched.confirmPassword && errors.confirmPassword && (
-                <div className="invalid-feedback">{errors.confirmPassword}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">
-                First Name
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                onChange={handleChange}
-                className={classNames(
-                  "form-control",
-                  { "is-invalid": touched.firstName && errors.firstName },
-                  { "is-valid": touched.firstName && !errors.firstName }
-                )}
-              />
-              {touched.firstName && errors.firstName && (
-                <div className="invalid-feedback">{errors.firstName}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                onChange={handleChange}
-                className={classNames(
-                  "form-control",
-                  { "is-invalid": touched.lastName && errors.lastName },
-                  { "is-valid": touched.lastName && !errors.lastName }
-                )}
-              />
-              {touched.lastName && errors.lastName && (
-                <div className="invalid-feedback">{errors.lastName}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="phone" className="form-label">
-                Phone
-              </label>
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                onChange={handleChange}
-                className={classNames(
-                  "form-control",
-                  { "is-invalid": touched.phone && errors.phone },
-                  { "is-valid": touched.phone && !errors.phone }
-                )}
-              />
-              {touched.phone && errors.phone && (
-                <div className="invalid-feedback">{errors.phone}</div>
-              )}
-            </div> */}
-            {}
             <div className="platforms">
               {platforms.map((el: IPlatform) => (
                 <img 
