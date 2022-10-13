@@ -52,7 +52,7 @@ const MoviesPage = () => {
     http
       .get<IGetMovieResponse>(url)
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         setMovies(data.data.items);
         //setCurrentPage(data.data.metadata.currentPage);
         setCountPages(data.data.metadata.totalPages);
@@ -73,7 +73,7 @@ const MoviesPage = () => {
   //const [showNotes, setShowNotes] = useState<boolean>(false);
   useEffect(() => {
     try{
-      console.log('loading');
+      //console.log('loading');
       //setIsLoading(true);
       getMoviesToState();
     }
@@ -85,7 +85,7 @@ const MoviesPage = () => {
     }
   }, []);
   useEffect(() => {
-    console.log('page');
+    //console.log('page');
     getMoviesToState();
   }, [currentPage]);
   // useEffect(() => {
@@ -95,11 +95,11 @@ const MoviesPage = () => {
   //   }
   // }, [querySearch, setQuerySearch]);
   const setPlatformsFromModal = (platforms : number[]) => {
-    console.log(platforms + ' : platforms');
+    //console.log(platforms + ' : platforms');
     setPlatforms(platforms);
   }
   const applyPlatforms = () =>{
-    console.log('p: ' + platforms);
+    //console.log('p: ' + platforms);
     getMoviesToState();
   }
   const applySearch = () =>{

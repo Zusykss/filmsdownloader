@@ -50,12 +50,12 @@ const SerialsPage = () => {
     http
       .get<IGetSerialResponse>(url)
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         setSerials(data.data.items);
         setCountPages(data.data.metadata.totalPages);
       })
       .catch((err) => {
-        alert(err);
+        console.error(err);
       }).finally(() => {
         setIsLoading(false);
       });
@@ -154,7 +154,6 @@ const SerialsPage = () => {
      { isLoading ? <Spinner animation="border" className="p-5 text-center"></Spinner> : (
       <>
       
-        {/* //<button></button> */}
     {serials.length > 0 || !serials ? (
       <>
         <table className="table">
@@ -216,6 +215,7 @@ const SerialsPage = () => {
         </table>
         <Pagination
           currentPage={currentPage}
+          
           onChangePage={(number: number) => setCurrentPage(number)}
           pageAmount={countPages}
         />

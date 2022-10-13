@@ -275,18 +275,19 @@ namespace MoviesParser
                             Console.WriteLine(ex.Message);
                         }
                     }
+                    await _page.Mouse.ClickAsync(388, 568, null);
                 }
 
                 await _page.EvaluateExpressionAsync("let arr = [];");
                 //Console.WriteLine(providersImages[0]);
                 //Thread.Sleep(3000);
                 //await _page.ClickAsync("img[src|=\"/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg\"]");
-                await _page.Mouse.ClickAsync(388, 568, null);
                 Thread.Sleep(2000);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(DateTime.UtcNow + " " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 if (ex.Message.Contains("Timeout of") && count < 5)
                 {
                     await _browser.CloseAsync();
@@ -317,10 +318,10 @@ namespace MoviesParser
 
                 if (url.Contains(item.Value))
                 {
-                    if (item.Key.Contains("Amazon")) // || item.Key.Contains("Paramount Plus")
-                    {
-                        return "Amazon Channel";
-                    }
+                    //if (item.Key.Contains("Amazon")) // || item.Key.Contains("Paramount Plus")
+                    //{
+                    //    return "Amazon Channel";
+                    //}
                     return item.Key;
                 }
             }

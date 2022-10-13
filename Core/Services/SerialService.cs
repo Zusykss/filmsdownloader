@@ -15,6 +15,7 @@ using Core.Exceptions;
 using Core.Helpers.Extensions;
 using Core.Interfaces;
 using Core.Interfaces.CustomServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Services
 {
@@ -31,7 +32,9 @@ namespace Core.Services
 
         public async Task<SerialsResponseDTO> GetByPage(QueryStringParameters queryStringParameters, IEnumerable<int> platforms)
         {
-            var collection = _mapper.Map<IEnumerable<SerialDTO>>((await _unitOfWork.SerialRepository.Get())).AsQueryable();////GetByPage(queryStringParameters)).ToList(); //.OrderByDescending(m => m.ParseTime)
+            var collection = _unitOfWork.SerialRepository.GetAll(include: (source) => source.Include(m => m.Status).Include(m => m.PlatformsSerials).ThenInclude(mp => mp.Platform));
+            //(await _unitOfWork.SerialRepository.Get())
+            
             if (!string.IsNullOrEmpty(queryStringParameters.QuerySearch))
             {
                 collection = collection.Where(m => m.Name.Contains(queryStringParameters.QuerySearch) || m.Url.Contains(queryStringParameters.QuerySearch));
@@ -108,14 +111,14 @@ namespace Core.Services
             };
 
             // Setting Response  
-
-            return new SerialsResponseDTO { Items = items, Metadata = paginationMetadata };
+            var res = _mapper.Map<IEnumerable<SerialDTO>>(items);//.AsQueryable();////GetByPage(queryStringParameters)).ToList(); //.OrderByDescending(m => m.ParseTime)
+            return new SerialsResponseDTO { Items = res, Metadata = paginationMetadata };
         }
 
 
         public async Task<SerialDTO> GetByUrl(string url)
         {
-            var serial = (await _unitOfWork.SerialRepository.Get(el => el.Url == url)).FirstOrDefault();
+            var serial =  _unitOfWork.SerialRepository.GetFirstOrDefault(predicate: el => el.Url == url, include: source => source.Include(s => s.Status).Include(s => s.PlatformsSerials).ThenInclude(pm => pm.Platform));
             return serial == null ? null : _mapper.Map<SerialDTO>(serial);
         }
 
@@ -131,7 +134,7 @@ namespace Core.Services
 
         public async Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id)
         {
-            var serial = await _unitOfWork.SerialRepository.GetById(id);
+            var serial = _unitOfWork.SerialRepository.GetFirstOrDefault(predicate : (el) => id == el.Id, include: source => source.Include(el2=> el2.PlatformsSerials).ThenInclude(el2 => el2.Platform), disableTracking: false);
             serial.PlatformsSerials.Clear();
             //var platformsModels = (await _unitOfWork.PlatformRepository.Get(el => platforms.Any(p => p.Name == el.Name))).ToHashSet();
             //foreach (var plat in platformsModels)

@@ -38,7 +38,7 @@ const PlatformSelector : React.FC<IPlatformSelectorProps> = (props : IPlatformSe
             text: "Something went wrong!",
           });
         });
-        console.log('use');
+        //console.log('use');
     },[]);
     useEffect(() => {
       props.setPlatformsFromModal(platforms.filter(p => p.isSelected === true).map(p => p.id));

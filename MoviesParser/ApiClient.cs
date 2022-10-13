@@ -13,8 +13,15 @@ namespace MoviesParser
 {
     public static class ApiClient
     {
-        static HttpClient client = new HttpClient();
+        private static HttpClient client;
         private static readonly string _apiPath = File.ReadAllLines("settings.txt")[6];//;//""
+        private static HttpClientHandler _clientHandler = new HttpClientHandler();
+
+        static ApiClient()
+        {
+            _clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            client = new HttpClient(_clientHandler);
+        }
         public static async Task CreatePlatformIfIsNotExist(string platformName, string imageUrl)
         {
             //client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;

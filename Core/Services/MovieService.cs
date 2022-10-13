@@ -18,7 +18,12 @@ using Core.Helpers.Extensions;
 using Core.Helpers.Options;
 using Core.Interfaces;
 using Core.Interfaces.CustomServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+//using Microsoft.EntityFrameworkCore.Internal.Q;
+
 
 namespace Core.Services
 {
@@ -36,14 +41,11 @@ namespace Core.Services
         public async Task<MoviesResponseDTO> GetByPage(QueryStringParameters queryStringParameters,
             IEnumerable<int> platforms)
         {
-            //return
-            //(await _unitOfWork.MovieRepository.Get()).Include
-            var collection = _mapper.Map<IEnumerable<MovieDTO>>((await _unitOfWork.MovieRepository.Get(includeProperties: "Status,PlatformsMovies"))).AsQueryable();////GetByPage(queryStringParameters)).ToList(); //.OrderByDescending(m => m.ParseTime)
+            var collection = _unitOfWork.MovieRepository.GetAll(include: (source) => source.Include(m => m.Status).Include(m=> m.PlatformsMovies).ThenInclude(mp=> mp.Platform));
             if (!string.IsNullOrEmpty(queryStringParameters.QuerySearch))
             {
                 collection = collection.Where(m => m.Name.Contains(queryStringParameters.QuerySearch) || m.Url.Contains(queryStringParameters.QuerySearch));
             }
-
             var platformsList = platforms.ToList();//platforms.ToArray();
             if (platformsList.Any())
             {
@@ -126,14 +128,14 @@ namespace Core.Services
             };
 
             // Setting Header  
-            
-            return new MoviesResponseDTO{ Items = items, Metadata = paginationMetadata };
+            var res = _mapper.Map<IEnumerable<MovieDTO>>(items).AsQueryable();////GetByPage(queryStringParameters)).ToList(); //.OrderByDescending(m => m.ParseTime)
+            return new MoviesResponseDTO{ Items = res, Metadata = paginationMetadata };
             //return new PagedList<MovieDTO>(collection, collection.Count, queryStringParameters.PageNumber, queryStringParameters.PageSize);
         }
 
         public async Task<MovieDTO> GetByUrl(string url)
         {
-            var movie = (await _unitOfWork.MovieRepository.Get(el => el.Url == url)).FirstOrDefault();
+            var movie = _unitOfWork.MovieRepository.GetFirstOrDefault(predicate: el => el.Url == url, include: source => source.Include(m => m.Status).Include(m=> m.PlatformsMovies).ThenInclude(pm => pm.Platform));
             return movie == null ? null : _mapper.Map<MovieDTO>(movie);
         }
 
@@ -167,7 +169,7 @@ namespace Core.Services
 
         public async Task SetPlatformsByNames(IEnumerable<CustomPlatform> platforms, int id)
         {
-            var movie = await _unitOfWork.MovieRepository.GetById(id);
+            var movie = _unitOfWork.MovieRepository.GetFirstOrDefault(predicate: (el) => id == el.Id, include: source => source.Include(el2 => el2.PlatformsMovies).ThenInclude(el2 => el2.Platform), disableTracking: false); 
             movie.PlatformsMovies.Clear();
             var platformsEntities = await _unitOfWork.PlatformRepository.Get();
             foreach (var platform in platforms)
