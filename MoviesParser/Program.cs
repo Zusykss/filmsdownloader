@@ -16,18 +16,29 @@ Console.WriteLine("Started");
 //Console.WriteLine(args.First());
 
 ParserStartConfiguration configuration = new ParserStartConfiguration();
-var category = args[0];
-configuration.ParserStartCategory = category.Substring(category.IndexOf('=') + 1) == "1" ? "movie" : "tv";
+string category = args.FirstOrDefault(el => el.Contains("-category"));
+category = category != null ? category.Substring(category.IndexOf('=') + 1) == "1" ? "movie" : "tv" : "tv";
+configuration.ParserStartCategory = category;
     //var platformsArgs = 
-if (args.Length > 1 && args[1].Contains("platforms"))
+
+string platforms = args.FirstOrDefault(el => el.Contains("-platforms"));
+if (platforms != null)
 {
-    var platforms = args[1].Substring(args[1].IndexOf('=') + 1).Split(',').Select(p => int.Parse(p)).ToArray();
-    configuration.Platforms = platforms;
+    configuration.Platforms = platforms.Substring(args[1].IndexOf('=') + 1).Split(',').Select(p => int.Parse(p)).ToArray();
 }
-if (args.Length > 2 && args[2].Contains("count"))
+//if (args.Length > 1 && args[1].Contains("platforms"))
+//{
+//    var platforms = args[1].Substring(args[1].IndexOf('=') + 1).Split(',').Select(p => int.Parse(p)).ToArray();
+//    configuration.Platforms = platforms;
+//}
+string count = args.FirstOrDefault(el => el.Contains("-count"));
+if (count != null)
 {
-    configuration.Count = int.Parse(args[2].Substring(args[2].IndexOf('=') + 1));
+    configuration.Count = int.Parse(count.Substring(count.IndexOf('=') + 1));
 }
+//if (args.Length > 2 && args[2].Contains("count"))
+//{
+//}
 //if (.Contains("category"))
 //{
 //}
